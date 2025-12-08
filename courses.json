@@ -1,0 +1,110 @@
+{
+  "courses": [
+    {
+      "title": "Chelsea Gray – Passing",
+      "description": "Master the fundamentals of passing at an elite level. Learn proper footwork, dribble pickups, peripheral passing, and how to deliver accurate passes under pressure.",
+      "tags": ["Chelsea Gray", "Point Guard", "Passing", "Ball Handling"],
+      "drills": [
+        {
+          "name": "Passing off Exchange",
+          "description": "Focuses on using dribble exchanges to generate passing opportunities. Emphasis on timing, tempo, and accuracy under pressure."
+        },
+        {
+          "name": "Exchange Through the Legs",
+          "description": "Develops ball control and the ability to transition between dribble moves and passes using through-the-legs exchange footwork."
+        },
+        {
+          "name": "Exchange Behind the Back",
+          "description": "Improves behind-the-back exchanges to create passing angles and deception during live actions."
+        },
+        {
+          "name": "Passing off the Dribble",
+          "description": "Teaches making accurate passes directly off the dribble with minimal gather time."
+        },
+        {
+          "name": "3 Dribble Exchange",
+          "description": "Chains multiple dribble transitions before passing. Emphasizes creativity and ball control."
+        },
+        {
+          "name": "Step Through Passing",
+          "description": "Uses step-through footwork to create passing lanes against defenders."
+        },
+        {
+          "name": "Step Through, Spin Outs",
+          "description": "Combines step-throughs and spin moves to maintain balance while delivering passes."
+        },
+        {
+          "name": "Speed Stop, Step Through, Spin Outs",
+          "description": "Adds tempo changes and controlled pivots to improve decision-making when defenders trap."
+        },
+        {
+          "name": "2 Ball Speed Stop, Step Through, Spin Outs",
+          "description": "A two-ball version that improves ambidexterity and ball control during footwork sequences."
+        },
+        {
+          "name": "Pocket Dribble Passing",
+          "description": "Develops pocket dribble control and passing accuracy from tight windows."
+        },
+        {
+          "name": "Behind the Back from Pocket Dribble",
+          "description": "Combines pocket dribble with behind-the-back manipulation before passing."
+        },
+        {
+          "name": "Peripheral Passing",
+          "description": "Trains reading targets without looking directly at them and passing from non-traditional angles."
+        },
+        {
+          "name": "Double Exchange Peripheral Passing",
+          "description": "Adds misdirection and speed with double exchanges before throwing peripheral passes."
+        },
+        {
+          "name": "Double Exchange Behind the Back Passing",
+          "description": "Uses double behind-the-back exchanges to challenge ball control and passing timing."
+        },
+        {
+          "name": "Double Exchange Sequence Behind the Back Passing",
+          "description": "Full sequence combining multiple exchanges behind the back before delivering the pass."
+        }
+      ]
+    },
+
+    {
+      "title": "Marina Mabrey – Stationary Ball Handling",
+      "description": "Develop elite-level tight handle, manipulation moves, and ball control from a stationary position. Build confidence with advanced dribble variations.",
+      "tags": ["Marina Mabrey", "Combo Guard", "Ball Handling"],
+      "drills": [
+        { "name": "Pound Dribbles", "description": "Repetitive pound dribbles to build hand speed and ball control." },
+        { "name": "Pocket Dribbles", "description": "Works on dribbling in tight spaces by keeping the ball in the hip pocket." },
+        { "name": "Push 1,2 Manipulation Series", "description": "Teaches manipulation of defenders using rhythmic dribbles." },
+        { "name": "Push, Pull Pocket Dribbles", "description": "Mixes forward and backward pocket dribbles for control and deception." },
+        { "name": "1,2 Manipulation Cross", "description": "Uses rhythmic dribbles leading into crossovers for misdirection." },
+        { "name": "1,2 Pocket Thrus", "description": "Practices transferring the ball through tight spaces with quick hands." },
+        { "name": "1,2 Pocket Behinds", "description": "Dribble manipulation leading into behind-the-back transfers." },
+        { "name": "1,2 Triple Exchange", "description": "High-speed sequence combining three types of exchanges." },
+        { "name": "Pocket Drops", "description": "Helps create separation with sudden pocket dribble drops." },
+        { "name": "Drop Thrus", "description": "Combines drop footwork with tight dribble control." },
+        { "name": "Split Behinds", "description": "Uses split steps and behind-the-back dribbles for rhythm and deception." },
+        { "name": "Continuous Drop Thrus", "description": "Repetitive drill for continuous footwork + pocket dribble flow." },
+        { "name": "Punch Drag", "description": "Ball manipulation through punch dribble and drag steps." },
+        { "name": "Drag Dribble", "description": "Pulls the ball backward and changes pace to simulate sudden stops." }
+      ]
+    },
+
+    {
+      "title": "Jordin Canada – Full Court Ball Handling",
+      "description": "Develop full-court handling skills with pace, change of direction, and downhill pressure. Ideal for point guards.",
+      "tags": ["Jordin Canada", "Point Guard", "Ball Handling"],
+      "drills": [
+        { "name": "Anchored Steps", "description": "Emphasizes maintaining anchor foot while changing direction." },
+        { "name": "Half Spins", "description": "Improves half-spin footwork and ball protection during turns." },
+        { "name": "Inverted Drags", "description": "Teaches planting and dragging footwork to change direction." },
+        { "name": "Low Crossovers", "description": "Builds tight, low, controlled crossovers to protect the basketball." },
+        { "name": "Punch Drag, Behind the Back", "description": "Combines punch dribble with behind-the-back move for balance and rhythm." },
+        { "name": "Punch Drag, Through the Legs", "description": "Adds between-the-legs variation to punch drag technique." },
+        { "name": "Skip Step, Behind the Back", "description": "Incorporates skip steps with behind-the-back transitions." },
+        { "name": "Skip Step, Through the Legs", "description": "Skip step footwork linked to through-the-legs dribble." },
+        { "name": "Speed Stop, Exchange", "description": "Teaches sudden stopping and quick hand exchanges into dribble attacks." }
+      ]
+    }
+  ]
+}
