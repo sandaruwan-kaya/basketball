@@ -7,31 +7,19 @@ from gemini_engine import gemini_analyse
 st.set_page_config(page_title="Basketball AI Coach", layout="wide")
 
 st.title("🏀 Basketball Training Video Analysis (POC)")
-
 st.write("Upload a video and compare Gemini 2.5 Pro vs Gemini 3 Preview performance.")
 
-# ---------------------------
-# Create logs folder
-# ---------------------------
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# ---------------------------
-# Tester Name Input
-# ---------------------------
 tester_name = st.text_input("Tester Name")
-
-# ---------------------------
-# File Upload
-# ---------------------------
 video = st.file_uploader("Upload a training video:", type=["mp4", "mov", "avi"])
 
-# ---------------------------
-# Analyze Button
-# ---------------------------
-if st.button("Analyze"):
 
-    # Validate inputs
+# -----------------------------------------------------
+# Analyze Button
+# -----------------------------------------------------
+if st.button("Analyze"):
     if tester_name.strip() == "":
         st.error("Please enter tester name.")
         st.stop()
@@ -46,45 +34,180 @@ if st.button("Analyze"):
         results = gemini_analyse(video_bytes)
 
     # ---------------------------
-    # Save Video + Results
+    # Create session folder
     # ---------------------------
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     session_folder = os.path.join(LOG_DIR, f"{tester_name}_{timestamp}")
     os.makedirs(session_folder, exist_ok=True)
 
-    # Save video file
+    # Save uploaded video
     video_path = os.path.join(session_folder, "video.mp4")
     with open(video_path, "wb") as f:
         f.write(video_bytes)
 
-    # Save model outputs
-    results_path = os.path.join(session_folder, "analysis.json")
-    with open(results_path, "w") as f:
+    # Save raw outputs
+    with open(os.path.join(session_folder, "raw_g25.txt"), "w", encoding="utf-8") as f:
+        f.write(results["gemini_2_5_pro"]["raw"])
+
+    with open(os.path.join(session_folder, "raw_g30.txt"), "w", encoding="utf-8") as f:
+        f.write(results["gemini_3_pro_preview"]["raw"])
+
+    # Save parsed JSON
+    with open(os.path.join(session_folder, "analysis.json"), "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4)
 
     # Save metadata
-    meta_path = os.path.join(session_folder, "meta.txt")
-    with open(meta_path, "w") as f:
+    with open(os.path.join(session_folder, "meta.txt"), "w") as f:
         f.write(f"Tester: {tester_name}\n")
         f.write(f"Timestamp: {timestamp}\n")
         f.write(f"Video File: {video_path}\n")
-        f.write(f"Analysis File: {results_path}\n")
+
+    # -----------------------------------------------------
+    # Extract parsed results
+    # -----------------------------------------------------
+    g25 = results["gemini_2_5_pro"]["parsed"]
+    g30 = results["gemini_3_pro_preview"]["parsed"]
 
     # ---------------------------
-    # UI Display (Your Layout)
+    # UI Display – POC Clean Mode
     # ---------------------------
     st.success("Analysis completed and session saved!")
 
     col1, col2 = st.columns(2)
 
+    # ---------------------------
+    # LEFT PANEL — Gemini 2.5 Pro
+    # ---------------------------
     with col1:
         st.subheader("🤖 Gemini 2.5 Pro")
-        st.text(results["gemini_2_5_pro"])
 
+        if g25 is None:
+            st.error("Model returned unreadable output.")
+        else:
+            attempted = g25["shots_attempted"]["total"]
+            made = g25["shots_made"]["total"]
+
+            st.metric("Shots Attempted", attempted)
+            st.metric("Shots Made", made)
+
+            st.write("### Shot Attempt Timestamps")
+            for ev in g25["shot_attempt_events"]:
+                st.write(f"• {ev['timestamp']}")
+
+            st.write("### Made Shot Timestamps")
+            for ev in g25["shot_made_events"]:
+                st.write(f"• {ev['timestamp']}")
+
+            st.write("### 📝 Coaching Feedback")
+
+            cf = g25["coaching_feedback"]   # for Gemini 2.5 Pro
+            # cf = g30["coaching_feedback"] # for Gemini 3 Pro Preview
+
+            st.markdown("#### 🟩 Summary")
+            st.write(cf["summary"])
+
+            st.markdown("#### 🟦 Stance & Balance")
+            st.write(cf["stance_and_balance"])
+
+            st.markdown("#### 🟧 Footwork")
+            st.write(cf["footwork"])
+
+            st.markdown("#### 🟨 Ball Gather & Set Point")
+            st.write(cf["ball_gather_and_set_point"])
+
+            st.markdown("#### 🟥 Release & Follow-through")
+            st.write(cf["release_and_follow_through"])
+
+            st.markdown("#### 🟪 Timing & Rhythm")
+            st.write(cf["timing_and_rhythm"])
+
+            st.markdown("#### 🟫 Shot Arc & Power")
+            st.write(cf["shot_arc_and_power"])
+
+            st.markdown("#### 🟩 Consistency")
+            st.write(cf["consistency"])
+
+            st.markdown("#### 🟦 Shot Selection")
+            st.write(cf["shot_selection"])
+
+            st.markdown("#### ⭐ Areas to Improve")
+            for item in cf["areas_to_improve"]:
+                st.write(f"• {item}")
+
+            # Optional: Show video limitations
+            if cf["limitations_in_video"]:
+                st.markdown("#### ⚠️ Limitations in Video")
+                for item in cf["limitations_in_video"]:
+                    st.write(f"• {item}")
+
+
+    # ---------------------------
+    # RIGHT PANEL — Gemini 3 Pro Preview
+    # ---------------------------
     with col2:
         st.subheader("🚀 Gemini 3 Pro Preview")
-        st.text(results["gemini_3_pro_preview"])
 
-    # Show folder name
+        if g30 is None:
+            st.error("Model returned unreadable output.")
+        else:
+            attempted = g30["shots_attempted"]["total"]
+            made = g30["shots_made"]["total"]
+
+            st.metric("Shots Attempted", attempted)
+            st.metric("Shots Made", made)
+
+            st.write("### Shot Attempt Timestamps")
+            for ev in g30["shot_attempt_events"]:
+                st.write(f"• {ev['timestamp']}")
+
+            st.write("### Made Shot Timestamps")
+            for ev in g30["shot_made_events"]:
+                st.write(f"• {ev['timestamp']}")
+
+            st.write("### 📝 Coaching Feedback")
+
+            # cf = g25["coaching_feedback"]   # for Gemini 2.5 Pro
+            cf = g30["coaching_feedback"] # for Gemini 3 Pro Preview
+
+            st.markdown("#### 🟩 Summary")
+            st.write(cf["summary"])
+
+            st.markdown("#### 🟦 Stance & Balance")
+            st.write(cf["stance_and_balance"])
+
+            st.markdown("#### 🟧 Footwork")
+            st.write(cf["footwork"])
+
+            st.markdown("#### 🟨 Ball Gather & Set Point")
+            st.write(cf["ball_gather_and_set_point"])
+
+            st.markdown("#### 🟥 Release & Follow-through")
+            st.write(cf["release_and_follow_through"])
+
+            st.markdown("#### 🟪 Timing & Rhythm")
+            st.write(cf["timing_and_rhythm"])
+
+            st.markdown("#### 🟫 Shot Arc & Power")
+            st.write(cf["shot_arc_and_power"])
+
+            st.markdown("#### 🟩 Consistency")
+            st.write(cf["consistency"])
+
+            st.markdown("#### 🟦 Shot Selection")
+            st.write(cf["shot_selection"])
+
+            st.markdown("#### ⭐ Areas to Improve")
+            for item in cf["areas_to_improve"]:
+                st.write(f"• {item}")
+
+            # Optional: Show video limitations
+            if cf["limitations_in_video"]:
+                st.markdown("#### ⚠️ Limitations in Video")
+                for item in cf["limitations_in_video"]:
+                    st.write(f"• {item}")
+
+    # ---------------------------
+    # Folder name
+    # ---------------------------
     st.write("📁 Saved to:")
     st.code(session_folder)

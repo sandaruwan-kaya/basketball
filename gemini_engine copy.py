@@ -1,71 +1,86 @@
-# import google.generativeai as genai
-
-# genai.configure(api_key="AIzaSyDlz3_1VehQmr-N6dut9gxxw3c0ly5LSWs")
-
 import google.generativeai as genai
 import base64
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
-
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-def gemini_analyse(video_bytes):
+# -----------------------------------------------------
+# Structured basketball analysis prompt
+# -----------------------------------------------------
+prompt = """
+You are an expert basketball shooting coach. Analyze the player's shooting technique AND count shots.
+
+### OUTPUT MUST BE IN THIS JSON FORMAT:
+
+{
+  "shots_attempted": {
+    "per_10_seconds": [],
+    "total": 0
+  },
+  "shots_made": {
+    "per_10_seconds": [],
+    "total": 0
+  },
+  "coaching_feedback": {
+    "summary": "",
+    "stance_and_balance": "",
+    "footwork": "",
+    "ball_gather_and_set_point": "",
+    "release_and_follow_through": "",
+    "timing_and_rhythm": "",
+    "shot_arc_and_power": "",
+    "consistency": "",
+    "shot_selection": "",
+    "areas_to_improve": [],
+    "limitations_in_video": []
+  }
+}
+
+### RULES:
+- Count a shot attempt only when the player visibly tries to shoot.
+- Count a made shot only when the ball clearly goes through the hoop.
+- If visibility is low or angle prevents certainty, add to "limitations_in_video".
+- Coaching feedback must be concise, structured, and written like real coach feedback.
+- If something cannot be assessed (camera angle, blur, missing hoop), explicitly mention this.
+- DO NOT include extra comments outside JSON.
+"""
+
+
+# -----------------------------------------------------
+# Helper: Try to parse model output JSON
+# -----------------------------------------------------
+def try_parse_json(raw_text: str):
+    raw = raw_text.strip()
+
+    # Direct parse attempt
+    try:
+        return json.loads(raw)
+    except:
+        pass
+
+    # If Gemini wrapped JSON in markdown ```json
+    if "```" in raw:
+        try:
+            cleaned = raw.split("```")[1]
+            cleaned = cleaned.replace("json", "").strip()
+            return json.loads(cleaned)
+        except:
+            pass
+
+    # Still failed → return None
+    return None
+
+
+# -----------------------------------------------------
+# Main runner for each model (returns raw + parsed)
+# -----------------------------------------------------
+def run_shot_counter(model_name, video_bytes):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
 
-    COURSE_JSON_DATA = open("courses.json").read()
-
-    prompt = f"""
-    You are a professional basketball skills trainer.
-
-    Below is the library of courses and drills we teach. Use this knowledge to classify the user's video and give course-specific feedback.
-
-    COURSE LIBRARY:
-    {COURSE_JSON_DATA}
-
-    YOUR TASKS:
-
-    1. **Drill Identification**
-    - Identify which course and drill the video most closely matches.
-    - If the drill cannot be confidently identified, say:
-        "Drill Match: Not enough visual information to determine the drill."
-
-    2. **Uncertainty Detection (IMPORTANT)**
-    - If any part of the player's body is missing from the frame (feet, shooting arm, hips, ball, etc.), clearly state:
-        "Unable to evaluate ____ because it is not visible in the video."
-    - If the angle, lighting, video quality, or motion blur prevents clear analysis, explicitly state:
-        "Video quality or angle prevents accurate evaluation of ____."
-
-    3. **Technique Evaluation**
-    - Evaluate the player's technique ONLY when the relevant part is visible.
-    - If something is partially visible, add:
-        "Assessment is limited due to partial visibility."
-
-    4. **Scoring**
-    Give a score from 0–100 for:
-    - Drill Accuracy
-    - Technical Execution
-    - Footwork & Control
-    - Overall Skill Level
-    If scoring is not possible, say:
-        "Scoring not possible due to insufficient visual information."
-
-    5. **Feedback Format**
-    Provide the final output in this structure:
-
-    How many shots did the person try 
-    How many shots did the person actually made
-    Course Match:
-    Drill Match:
-    Missing Information:
-    Score Breakdown:
-    Strengths:
-    Corrections:
-    Final Feedback:
-    """
-
-    model = genai.GenerativeModel("gemini-2.5-pro")
+    model = genai.GenerativeModel(model_name)
 
     response = model.generate_content(
         [
@@ -77,4 +92,42 @@ def gemini_analyse(video_bytes):
         ]
     )
 
-    return response.text
+    # -------------------------
+    # SAFE TEXT EXTRACTION
+    # -------------------------
+    raw = ""
+
+    try:
+        # First try normal accessor
+        raw = response.text or ""
+    except Exception:
+        # Fallback manual extraction
+        try:
+            if response.candidates:
+                parts = response.candidates[0].content.parts
+                if parts:
+                    raw = parts[0].text
+        except:
+            raw = ""
+
+    parsed = try_parse_json(raw)
+
+    return {
+        "raw": raw,
+        "parsed": parsed
+    }
+
+
+
+# -----------------------------------------------------
+# Main compare function
+# -----------------------------------------------------
+def gemini_analyse(video_bytes):
+
+    result_25 = run_shot_counter("gemini-2.5-pro", video_bytes)
+    result_30 = run_shot_counter("gemini-3-pro-preview", video_bytes)
+
+    return {
+        "gemini_2_5_pro": result_25,
+        "gemini_3_pro_preview": result_30
+    }

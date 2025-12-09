@@ -2,39 +2,94 @@ import google.generativeai as genai
 import base64
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # -----------------------------------------------------
-# Helper: Run shot counter prompt for a specific model
+# Structured basketball analysis prompt
 # -----------------------------------------------------
-def run_shot_analysis(model_name, video_bytes):
-    video_base64 = base64.b64encode(video_bytes).decode("utf-8")
+prompt = """
+You are an expert basketball shooting coach. Analyze the player's shooting technique AND count shots.
 
-    prompt = """
-You are a professional basketball shooting analyst.
+### OUTPUT MUST BE IN THIS JSON FORMAT:
 
-ONLY report the following:
+{
+  "shot_attempt_events": [
+    { "timestamp": "" }
+  ],
+  "shot_made_events": [
+    { "timestamp": "" }
+  ],
+  "shots_attempted": {
+    "total": 0
+  },
+  "shots_made": {
+    "total": 0
+  },
+  "coaching_feedback": {
+    "summary": "",
+    "stance_and_balance": "",
+    "footwork": "",
+    "ball_gather_and_set_point": "",
+    "release_and_follow_through": "",
+    "timing_and_rhythm": "",
+    "shot_arc_and_power": "",
+    "consistency": "",
+    "shot_selection": "",
+    "areas_to_improve": [],
+    "limitations_in_video": []
+  }
+}
 
-How many shots did the person try (count per 10-second intervals + total)
-How many shots did the person actually made (count per 10-second intervals + total)
-
-Rules:
-- Count every clear shooting motion as an attempt.
-- Count as 'made' only when the ball clearly goes inside the basket.
-- If visibility is bad, write: "Not enough visual information to count accurately."
-
-Format EXACTLY like this:
-
-Shots Attempted:
-- Per 10 sec: X, X, X ...
-- Total: X
-
-Shots Made:
-- Per 10 sec: X, X, X ...
-- Total: X
+### RULES:
+- You MUST NOT guess. Only count a shot if the ball is clearly visible and the motion is fully observable in the video.
+- If uncertain, DO NOT count the shot.
+- Your output MUST be deterministic. Identical input videos must always produce the same counts.
+- Review and analyze every visible shot frame-by-frame logically before counting.
+- For each shot attempt, return the exact timestamp (mm:ss.s or ss.s format).
+- For each made shot, return the timestamp when the ball enters the hoop.
+- timestamps MUST be inside the shot_attempt_events and shot_made_events arrays.
+- shots_attempted.total MUST equal shot_attempt_events.length.
+- shots_made.total MUST equal shot_made_events.length.
+- If timestamp cannot be identified due to video quality or angle, omit that event and explain in limitations_in_video.
+- Coaching feedback must be concise and structured.
+- DO NOT include extra text outside JSON.
 """
+
+
+
+# -----------------------------------------------------
+# Helper: Try to parse model output JSON
+# -----------------------------------------------------
+def try_parse_json(raw_text: str):
+    raw = raw_text.strip()
+
+    # Direct parse attempt
+    try:
+        return json.loads(raw)
+    except:
+        pass
+
+    # If Gemini wrapped JSON in markdown ```json
+    if "```" in raw:
+        try:
+            cleaned = raw.split("```")[1]
+            cleaned = cleaned.replace("json", "").strip()
+            return json.loads(cleaned)
+        except:
+            pass
+
+    # Still failed → return None
+    return None
+
+
+# -----------------------------------------------------
+# Main runner for each model (returns raw + parsed)
+# -----------------------------------------------------
+def run_shot_counter(model_name, video_bytes):
+    video_base64 = base64.b64encode(video_bytes).decode("utf-8")
 
     model = genai.GenerativeModel(model_name)
 
@@ -48,19 +103,42 @@ Shots Made:
         ]
     )
 
-    return response.text
+    # -------------------------
+    # SAFE TEXT EXTRACTION
+    # -------------------------
+    raw = ""
+
+    try:
+        # First try normal accessor
+        raw = response.text or ""
+    except Exception:
+        # Fallback manual extraction
+        try:
+            if response.candidates:
+                parts = response.candidates[0].content.parts
+                if parts:
+                    raw = parts[0].text
+        except:
+            raw = ""
+
+    parsed = try_parse_json(raw)
+
+    return {
+        "raw": raw,
+        "parsed": parsed
+    }
+
 
 
 # -----------------------------------------------------
-# Main comparison function (used in app.py)
+# Main compare function
 # -----------------------------------------------------
 def gemini_analyse(video_bytes):
-    # Run both models
-    output_25 = run_shot_analysis("gemini-2.5-pro", video_bytes)
-    output_30 = run_shot_analysis("gemini-3-pro-preview", video_bytes)
 
-    # Return side-by-side results to Streamlit
+    result_25 = run_shot_counter("gemini-2.5-pro", video_bytes)
+    result_30 = run_shot_counter("gemini-3-pro-preview", video_bytes)
+
     return {
-        "gemini_2_5_pro": output_25,
-        "gemini_3_pro_preview": output_30
+        "gemini_2_5_pro": result_25,
+        "gemini_3_pro_preview": result_30
     }
