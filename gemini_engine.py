@@ -6,38 +6,34 @@ from dotenv import load_dotenv
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# -------------------------------
-# Helper: Run model with prompt
-# -------------------------------
-def run_shot_counter(model_name, video_bytes):
+# -----------------------------------------------------
+# Helper: Run shot counter prompt for a specific model
+# -----------------------------------------------------
+def run_shot_analysis(model_name, video_bytes):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
 
     prompt = """
-You are an expert basketball video analyst.
+You are a professional basketball shooting analyst.
 
-ONLY OUTPUT THE FOLLOWING FIELDS:
+ONLY report the following:
 
-1. How many shots did the person try (count per 10-second intervals + total)
-2. How many shots did the person actually make (count per 10-second intervals + total)
+How many shots did the person try (count per 10-second intervals + total)
+How many shots did the person actually made (count per 10-second intervals + total)
 
-RULES:
-- Count each shot attempt (any shooting motion toward the basket).
-- Count made shots only when the ball clearly goes into the hoop.
-- If the video quality or angle prevents determining a shot attempt or made shot,
-  say: "Not enough visual information for accurate counting."
+Rules:
+- Count every clear shooting motion as an attempt.
+- Count as 'made' only when the ball clearly goes inside the basket.
+- If visibility is bad, write: "Not enough visual information to count accurately."
 
-FORMAT STRICTLY AS JSON ONLY:
+Format EXACTLY like this:
 
-{
-  "shots_attempted": {
-    "per_10_seconds": [],
-    "total": 0
-  },
-  "shots_made": {
-    "per_10_seconds": [],
-    "total": 0
-  }
-}
+Shots Attempted:
+- Per 10 sec: X, X, X ...
+- Total: X
+
+Shots Made:
+- Per 10 sec: X, X, X ...
+- Total: X
 """
 
     model = genai.GenerativeModel(model_name)
@@ -55,16 +51,16 @@ FORMAT STRICTLY AS JSON ONLY:
     return response.text
 
 
-# -----------------------------------------------
-# MAIN: Analyse video using both Gemini models
-# -----------------------------------------------
+# -----------------------------------------------------
+# Main comparison function (used in app.py)
+# -----------------------------------------------------
 def gemini_analyse(video_bytes):
+    # Run both models
+    output_25 = run_shot_analysis("gemini-2.5-pro", video_bytes)
+    output_30 = run_shot_analysis("gemini-3-pro-preview", video_bytes)
 
-    result_25 = run_shot_counter("gemini-2.5-pro", video_bytes)
-    result_30 = run_shot_counter("gemini-3-pro-preview", video_bytes)
-
-    # Combined side-by-side return
+    # Return side-by-side results to Streamlit
     return {
-        "gemini_2_5_pro": result_25,
-        "gemini_3_pro_preview": result_30
+        "gemini_2_5_pro": output_25,
+        "gemini_3_pro_preview": output_30
     }
