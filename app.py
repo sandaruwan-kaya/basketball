@@ -10,7 +10,8 @@ st.write("Upload a video and choose which AI engine should analyze your movement
 
 engine = st.selectbox(
     "Choose AI Engine",
-    ("Gemini Vision", "GPT-5 Vision")
+    ("Gemini Vision",)
+    # ("Gemini Vision", "GPT-5 Vision")
 )
 
 video = st.file_uploader("Upload a training video:", type=["mp4", "mov", "avi"])
@@ -24,8 +25,8 @@ if st.button("Analyze"):
         with st.spinner("Analyzing…"):
             if engine == "Gemini Vision":
                 result = gemini_analyse(video_bytes)
-            else:
-                result = gpt5_analyse(video_bytes)
+            # else:
+            #     result = gpt5_analyse(video_bytes)
 
         st.subheader("🏀 Coaching Feedback")
         st.write(result)
