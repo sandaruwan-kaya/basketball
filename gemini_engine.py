@@ -3,6 +3,7 @@ import base64
 import os
 from dotenv import load_dotenv
 import json
+import time
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -86,12 +87,14 @@ def try_parse_json(raw_text: str):
 
 
 # -----------------------------------------------------
-# Main runner for each model (returns raw + parsed)
+# Main runner for each model (returns raw + parsed + metrics)
 # -----------------------------------------------------
 def run_shot_counter(model_name, video_bytes):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
 
     model = genai.GenerativeModel(model_name)
+
+    start_time = time.time()
 
     response = model.generate_content(
         [
@@ -103,16 +106,17 @@ def run_shot_counter(model_name, video_bytes):
         ]
     )
 
+    end_time = time.time()
+    latency_sec = round(end_time - start_time, 3)
+
     # -------------------------
     # SAFE TEXT EXTRACTION
     # -------------------------
     raw = ""
 
     try:
-        # First try normal accessor
         raw = response.text or ""
     except Exception:
-        # Fallback manual extraction
         try:
             if response.candidates:
                 parts = response.candidates[0].content.parts
@@ -123,15 +127,33 @@ def run_shot_counter(model_name, video_bytes):
 
     parsed = try_parse_json(raw)
 
+    # -------------------------
+    # TOKEN USAGE (Gemini API)
+    # -------------------------
+    input_tokens = 0
+    output_tokens = 0
+
+    try:
+        usage = response.usage_metadata
+        input_tokens = usage.prompt_token_count
+        output_tokens = usage.candidates_token_count
+    except:
+        pass
+
     return {
         "raw": raw,
-        "parsed": parsed
+        "parsed": parsed,
+        "latency_sec": latency_sec,
+        "tokens": {
+            "input": input_tokens,
+            "output": output_tokens,
+            "total": input_tokens + output_tokens
+        }
     }
 
 
-
 # -----------------------------------------------------
-# Main compare function
+# Compare both models with metrics
 # -----------------------------------------------------
 def gemini_analyse(video_bytes):
 
