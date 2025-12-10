@@ -16,7 +16,8 @@ PROMPT = """
  
   "PROCESSING_RULES": {
     "segmentation_strategy": "Divide the video into rigid 5-second chunks (00:00-00:05, 00:05-00:10, etc.).",
-    "attribution_rule": "A shot belongs to the interval where the BALL RELEASE occurs. If a player releases at 00:04 but the ball goes in at 00:06, count both the attempt and the make in the 00:00-00:05 interval."
+    "attribution_rule": "A shot belongs to the interval where the BALL RELEASE occurs. If a player releases at 00:04 but the ball goes in at 00:06, count both the attempt and the make in the 00:00-00:05 interval.",
+    "uncertainty_rule": "If visibility is obstructed or if the ball release is not perfectly clear, DO NOT COUNT."
   },
  
   "DEFINITIONS": {

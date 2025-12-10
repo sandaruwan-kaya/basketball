@@ -37,7 +37,7 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
     # ---------------------------------------------------------
     if model_name == "gemini-2.5-pro":
         generation_config = {
-            "temperature": 0.2,
+            "temperature": 0.0,
             "top_p": 1.0,
             "top_k": 1,
             "max_output_tokens": 8192,
