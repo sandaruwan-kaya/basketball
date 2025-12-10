@@ -9,91 +9,58 @@ from gemini_engine import compare_models
 # Hard-coded prompt here
 # -------------------------
 PROMPT = """
-You are an expert basketball shooting coach AND a precise video analyst.
-Your job is to (1) COUNT SHOTS.
- 
-You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
- 
---------------------------------
-TASK
---------------------------------
-From the provided basketball shooting video:
- 
-1. Identify every DISTINCT shot attempt.
-2. Identify which of those attempts are MADE shots.
- 
---------------------------------
-DEFINITIONS
---------------------------------
-- "Shot attempt":
-  - A deliberate shooting motion TOWARD the basket where:
-    - The player gathers the ball,
-    - Moves through a shooting motion, and
-    - RELEASES the ball from their hands TOWARD the hoop.
-  - Includes jump shots, set shots, free throws, and layups IF clearly attempted at the basket.
-  - EXCLUDE:
-    - Passes, lobs, or heaves that are clearly not meant to score.
-    - Dribbling, fakes, and pump fakes that do NOT end with the ball leaving the hand toward the rim.
-    - Motions where the ball leaves the frame and it is unclear that it was a shot.
- 
-- "Made shot":
-  - A shot attempt where it is CLEARLY visible that the ball goes completely through the hoop.
-  - If the ball’s path or hoop is obscured and you cannot CONFIRM that the ball went through:
-    - DO NOT count it as made.
-    - Treat it as "attempt only" IF the attempt itself is clear.
- 
---------------------------------
-OUTPUT JSON FORMAT (STRICT)
---------------------------------
-You MUST return ONLY this JSON structure and nothing else:
- 
 {
-  "shots_attempted": {
-    "total": 0
+  "role": "EXPERT_BASKETBALL_ANALYST",
+  "task": "PRECISION_SHOOTING_METRICS_BY_INTERVAL",
+  "objective": "Analyze the video in 5-second distinct intervals. Count shot attempts and made shots for each interval, then aggregate for the final total.",
+ 
+  "PROCESSING_RULES": {
+    "segmentation_strategy": "Divide the video into rigid 5-second chunks (00:00-00:05, 00:05-00:10, etc.).",
+    "attribution_rule": "A shot belongs to the interval where the BALL RELEASE occurs. If a player releases at 00:04 but the ball goes in at 00:06, count both the attempt and the make in the 00:00-00:05 interval."
   },
-  "shots_made": {
-    "total": 0
-  }
+ 
+  "DEFINITIONS": {
+    "SHOT_ATTEMPT": {
+      "definition": "A deliberate shooting motion where the ball is RELEASED.",
+      "action": "Count as 1 attempt in the current time interval."
+    },
+    "MADE_SHOT": {
+      "definition": "A shot attempt that successfully goes through the hoop.",
+      "visual_cues": ["Ball clears the rim and passes through the net."],
+      "action": "Count as 1 make in the current time interval."
+    }
+  },
+ 
+  "OUTPUT_FORMAT": {
+    "type": "STRICT_JSON",
+    "schema": {
+      "intervals": [
+        {
+          "time_range": "00:00 - 00:05",
+          "attempts": 0,
+          "makes": 0
+        },
+        {
+          "time_range": "00:05 - 00:10",
+          "attempts": 0,
+          "makes": 0
+        }
+        // Continue for the duration of the video
+      ],
+      "final_stats": {
+        "total_attempts": 0,
+        "total_makes": 0
+      }
+    }
+  },
+ 
+  "VALIDATION_RULES": [
+    "1. 'final_stats.total_attempts' MUST be the exact sum of 'attempts' in all intervals.",
+    "2. 'final_stats.total_makes' MUST be the exact sum of 'makes' in all intervals.",
+    "3. Ensure every second of the video is covered by an interval.",
+    "4. Do NOT include conversational text, markdown, or explanations. ONLY return the JSON."
+  ]
 }
-
---------------------------------
-COUNTING & VALIDATION RULES
---------------------------------
-You MUST obey ALL of these:
- 
-1. NO GUESSING:
-   - Only count a shot attempt if:
-     - The shooting motion is clearly visible, AND
-     - The ball release toward the basket is clearly visible.
-   - Only count a made shot if:
-     - The ball CLEARLY goes through the hoop.
-   - If you cannot clearly see the full motion or the hoop outcome:
-     - Do NOT count a made shot.
-     - You may still count it as an attempt ONLY if the attempt itself is clearly visible.
-     - If even the attempt is unclear, do not count it at all.
- 
-2. CONSISTENCY CHECKS:
-   - `shots_attempted.total` MUST equal `shot_attempt_events.length`.
-   - `shots_made.total` MUST equal `shot_made_events.length`.
-   - `shots_made.total` MUST NOT exceed `shots_attempted.total`.
- 
-3. VIDEO LIMITATIONS:
-   - If any potential attempts or makes cannot be judged because of:
-     - Poor camera angle
-     - Obstructions
-     - Blurry frames
-     - Hoop or ball going out of frame
-   - DO NOT count those as attempts or makes.
- 
-If the video is too short, too dark, or does not contain any valid shot attempts:
-- Set totals to 0.
-- Leave `shot_attempt_events` and `shot_made_events` as empty arrays.
- 
---------------------------------
-FINAL REQUIREMENT
---------------------------------
-Return ONLY the JSON object described above.
-Do NOT include explanations, notes, or any text outside the JSON.
 """
 
 LOG_DIR = "logs"
