@@ -5,6 +5,9 @@ import time
 import json
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+from video_chunker import chunk_video_bytes
+
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -108,16 +111,41 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
 #         "gemini_3_pro_preview": r30
 #     }
 
+
+
 def compare_models(prompt: str, video_bytes: bytes):
 
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        future_25 = executor.submit(run_gemini, "gemini-2.5-pro", prompt, video_bytes, [])
-        future_30 = executor.submit(run_gemini, "gemini-3-pro-preview", prompt, video_bytes, [])
+    # STEP 1: chunk the input video
+    chunks = chunk_video_bytes(video_bytes, chunk_size=10, overlap=1)
 
-        r25 = future_25.result()
-        r30 = future_30.result()
+    def process_chunk(chunk, model_name):
+        return run_gemini(
+            model_name,
+            prompt,
+            chunk["bytes"],
+            []
+        ), chunk["start_time"]
+
+    results_25 = []
+    results_30 = []
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = []
+
+        for chunk in chunks:
+            futures.append(executor.submit(process_chunk, chunk, "gemini-2.5-pro"))
+            futures.append(executor.submit(process_chunk, chunk, "gemini-3-pro-preview"))
+
+        for f in futures:
+            (res, offset) = f.result()
+            res["offset"] = offset
+
+            if res["model"] == "gemini-2.5-pro":
+                results_25.append(res)
+            else:
+                results_30.append(res)
 
     return {
-        "gemini_2_5_pro": r25,
-        "gemini_3_pro_preview": r30
+        "gemini_2_5_pro": results_25,
+        "gemini_3_pro_preview": results_30
     }

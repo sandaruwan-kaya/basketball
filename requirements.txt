@@ -2,4 +2,4 @@ streamlit
 openai
 google-generativeai
 dotenv
-moviepy
+moviepy==1.0.3
