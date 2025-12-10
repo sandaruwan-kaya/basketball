@@ -35,6 +35,7 @@ if st.button("Analyze"):
         st.stop()
 
     video_bytes = video.read()
+    original_filename = video.name
 
     with st.spinner("Analyzing using both models…"):
         results = gemini_analyse(video_bytes)
@@ -106,6 +107,7 @@ if st.button("Analyze"):
     with open(os.path.join(session_folder, "meta.txt"), "w") as f:
         f.write(f"Tester: {tester_name}\n")
         f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Original Filename: {video.name}\n")
         f.write(f"Video File: {video_path}\n")
 
     # # -----------------------------------------------------
