@@ -12,16 +12,54 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
     model = genai.GenerativeModel(model_name)
 
+    # -------------------------------
+    # 🔥 Generation configuration here
+    # -------------------------------
+    generation_config_25 = {
+        "temperature": 0.2,          # lower = more deterministic
+        "top_p": 0.4,
+        "top_k": 10,
+        "max_output_tokens": 8192,
+        "candidate_count": 1,
+        # "thinking_budget": type.ThinkingConfig(thinking_budget=1024),
+        # "response_mime_type": "application/json",  # force JSON
+        # "stop_sequences": ["END"],
+    }
+
+    generation_config_30 = {
+        "temperature": 1.0,
+        "top_p": 0.95,
+        "max_output_tokens": 65535,
+        "candidate_count": 1,
+        # "thinking_budget": type.ThinkingConfig(thinking_budget=1024),
+        # "response_mime_type": "application/json",  # force JSON
+        # "stop_sequences": ["END"],
+    }
+
     start = time.time()
 
-    response = model.generate_content(
+    response_25 = model.generate_content(
         [
             prompt,
             {"mime_type": "video/mp4", "data": video_base64}
-        ]
+        ],
+        generation_config=generation_config_25
+    )
+
+    response_30 = model.generate_content(
+        [
+            prompt,
+            {"mime_type": "video/mp4", "data": video_base64}
+        ],
+        generation_config=generation_config_30
     )
 
     latency = round(time.time() - start, 3)
+
+    if model_name == "gemini-2.5-pro":
+        response = response_25
+    else:
+        response = response_30
 
     raw = ""
     try:
