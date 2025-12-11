@@ -1,118 +1,53 @@
-# app.py
-import streamlit as st
 import os
-import json
-import datetime
-from gemini_engine import compare_models
+import time
+from gemini_engine import gemini_analyse
+# from shot_detector_yolo import detect_made_shots # Uncomment if you use YOLO
 
-# -------------------------
-# Hard-coded prompt here
-# -------------------------
-PROMPT = """
-You are an expert basketball shooting coach AND a precise video analyst.
-Your job is to (1) COUNT SHOTS.
-
-You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
-
---------------------------------
-TASK
---------------------------------
-From the provided basketball shooting video:
-
-1. Identify every DISTINCT shot attempt.
-2. Identify which of those attempts are MADE shots.
-
---------------------------------
-DEFINITIONS
---------------------------------
-- "Shot attempt":
-  - A deliberate shooting motion TOWARD the basket where:
-    - The player gathers the ball,
-    - Moves through a shooting motion, and
-    - RELEASES the ball from their hands TOWARD the hoop.
-  - EXCLUDE passes, lobs, fakes, dribbles, unclear releases.
-
-- "Made shot":
-  - Only if the ball CLEARLY goes through the hoop.
-  - If unclear → count as attempt only.
-
---------------------------------
-STRICT OUTPUT FORMAT
---------------------------------
-{
-  "shots_attempted": { "total": 0 },
-  "shots_made": { "total": 0 }
-}
-
---------------------------------
-RULES
---------------------------------
-- No guessing.
-- shots_made.total <= shots_attempted.total
-- If unclear → do not count.
-"""
-
+# --- Configuration ---
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-st.title("⚡ Gemini Video Test (Minimal Mode)")
-st.write("Upload a video and compare Gemini 2.5 Pro vs Gemini 3 Preview outputs.")
+VIDEO_PATH = "samples/10.MOV"
 
-video = st.file_uploader("Upload a training video:", type=["mp4", "mov", "avi"])
+# 🌟 NEW CONFIGURATION VARIABLE
+NUM_RUNS = 1 
+# Set this to any integer (e.g., 1 for a quick test, 10 for detailed consistency)
 
-if st.button("Run Analysis"):
+PROMPT = (
+    "Analyze the provided video segment and accurately count the total number of "
+    "basketball shots attempted and the total number of shots made. "
+    "Only count fully visible shots where the outcome (make or miss) can be determined. "
+    "Do not include free throws unless explicitly visible. "
+    "Return the counts in the required JSON schema."
+)
 
-    if video is None:
-        st.error("Please upload a video first.")
-        st.stop()
+with open(VIDEO_PATH, "rb") as f:
+    video_bytes = f.read()
 
-    video_bytes = video.read()
+# -----------------------------------------------------
+# Run Gemini
+# -----------------------------------------------------
+print("PROMPT: ", PROMPT)
+print(f"Executing Gemini Analysis for {NUM_RUNS} run(s)...")
 
-    st.info("Running models… please wait.")
+merged, session_dir = gemini_analyse(
+    prompt=PROMPT,
+    video_bytes=video_bytes,
+    log_dir=LOG_DIR,
+    num_runs=NUM_RUNS  # 🌟 PASS THE FLAG HERE
+)
 
-    # Run both Gemini models
-    results = compare_models(PROMPT, video_bytes)
-
-    # st.subheader("Live Logs")
-    # st.text("\n".join(results["gemini_2_5_pro"]["log"]))
-    # st.text("\n".join(results["gemini_3_pro_preview"]["log"]))
-
-
-    # -------------------------
-    # Create log folder
-    # -------------------------
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    session_dir = os.path.join(LOG_DIR, f"session_{timestamp}")
-    os.makedirs(session_dir, exist_ok=True)
-
-    # Save raw outputs
-    with open(os.path.join(session_dir, "raw_g25.txt"), "w", encoding="utf-8") as f:
-        f.write(results["gemini_2_5_pro"]["raw"])
-
-    with open(os.path.join(session_dir, "raw_g30.txt"), "w", encoding="utf-8") as f:
-        f.write(results["gemini_3_pro_preview"]["raw"])
-
-    with open(os.path.join(session_dir, "results.json"), "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=4)
-
-    st.success("Completed! Results logged.")
-
-    # -------------------------
-    # DISPLAY RESULTS
-    # -------------------------
-
-    st.subheader("🐢 Gemini 2.5 Pro Output")
-    r = results["gemini_2_5_pro"]
-    st.write(f"Latency: **{r['latency']} sec**")
-    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25")
+print("\nGemini processing done. Logs at:", session_dir)
+print("\nFinal Consistency Array Output:")
 
 
-    st.subheader("🚀 Gemini 3 Pro Preview Output")
-    r = results["gemini_3_pro_preview"]
-    st.write(f"Latency: **{r['latency']} sec**")
-    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
+# -----------------------------------------------------
+# Run YOLO made-shot detector (Optional)
+# -----------------------------------------------------
+# made_log_dir = os.path.join(session_dir, "yolo")
+# os.makedirs(made_log_dir, exist_ok=True)
 
+# made_shots = detect_made_shots(VIDEO_PATH, made_log_dir)
 
-    st.code(f"Logs saved at: {session_dir}")
+# print("\nMade shots detected at timestamps (sec):")
+# print(made_shots)
