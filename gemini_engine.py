@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, Field
+from typing import Union
 
 # --- Pydantic Schema Definition ---
 # This class defines the EXACT structure the model must return for each chunk.
@@ -23,15 +24,12 @@ class ChunkSummary(BaseModel):
         ...,
         description="The total number of successful shots (makes) in this video segment."
     )
-    # NEW: per-chunk, relative timestamps (seconds) as strings
-    shot_attempt_events: list[str] = Field(
-        default_factory=list,
-        description="Timestamps in seconds (relative to this chunk) for each shot attempt."
-    )
-    shot_made_events: list[str] = Field(
-        default_factory=list,
-        description="Timestamps in seconds (relative to this chunk) for each made shot."
-    )
+    # NEW: per-chunk, relative timestamps (seconds) as strings or floats
+    shot_attempt_events: list[Union[str, float]] = Field(default_factory=list)
+    shot_made_events: list[Union[str, float]] = Field(default_factory=list)
+
+
+
 
 # --- Initialization ---
 load_dotenv()
@@ -176,8 +174,15 @@ def _get_single_run_totals(client, prompt, video_path, chunks, fps):
             cumulative_totals[model_key]["shots_made"] += g30_parsed.get("shots_made", 0)
 
             # timestamps: convert relative → absolute
-            rel_attempts = g30_parsed.get("shot_attempt_events", [])
-            rel_mades = g30_parsed.get("shot_made_events", [])
+            rel_attempts = [
+                normalize_ts(t) for t in g30_parsed.get("shot_attempt_events", [])
+                if normalize_ts(t) is not None
+            ]
+            rel_mades = [
+                normalize_ts(t) for t in g30_parsed.get("shot_made_events", [])
+                if normalize_ts(t) is not None
+            ]
+
 
             abs_attempts = []
             abs_mades = []
@@ -206,8 +211,14 @@ def _get_single_run_totals(client, prompt, video_path, chunks, fps):
             cumulative_totals[model_key]["shots_made"] += g25_parsed.get("shots_made", 0)
 
             # timestamps: convert relative → absolute
-            rel_attempts = g25_parsed.get("shot_attempt_events", [])
-            rel_mades = g25_parsed.get("shot_made_events", [])
+            rel_attempts = [
+                normalize_ts(t) for t in g25_parsed.get("shot_attempt_events", [])
+                if normalize_ts(t) is not None
+            ]
+            rel_mades = [
+                normalize_ts(t) for t in g25_parsed.get("shot_made_events", [])
+                if normalize_ts(t) is not None
+            ]
 
             abs_attempts = []
             abs_mades = []
@@ -317,3 +328,20 @@ def gemini_analyse(prompt, video_bytes, log_dir, num_runs=5):
 
     # Return the full combined dictionary and the session directory
     return final_output, session_dir
+
+def normalize_ts(t):
+    try:
+        t = str(t).lower().replace("s", "").strip()
+
+        # format: mm:ss or hh:mm:ss
+        if ":" in t:
+            parts = t.split(":")
+            sec = 0
+            for p in parts:
+                sec = sec * 60 + float(p)
+            return sec
+
+        return float(t)
+    except:
+        return None
+

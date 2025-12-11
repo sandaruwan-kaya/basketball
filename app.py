@@ -7,7 +7,7 @@ from gemini_engine import gemini_analyse
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
-VIDEO_PATH = "samples/10.MOV"
+VIDEO_PATH = "samples/12.MOV"
 
 # 🌟 NEW CONFIGURATION VARIABLE
 NUM_RUNS = 5  # Increase for better consistency (optional)
@@ -15,8 +15,7 @@ NUM_RUNS = 5  # Increase for better consistency (optional)
 # 🔥 IMPORTANT PROMPT UPDATE (requires timestamps)
 PROMPT = (
     "You are an expert basketball video analyst. "
-    "Analyze the provided video segment and identify:\n"
-    "Analyze the provided video segment and accurately count the total number of "
+    "Analyze the provided video segment and accurately count the total number of\n"
     "basketball shots attempted and the total number of shots made. "
     "Only count fully visible shots where the outcome (make or miss) can be determined. "
     "Do not include free throws unless explicitly visible. "
