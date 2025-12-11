@@ -9,59 +9,47 @@ from gemini_engine import compare_models
 # Hard-coded prompt here
 # -------------------------
 PROMPT = """
+You are an expert basketball shooting coach AND a precise video analyst.
+Your job is to (1) COUNT SHOTS.
+
+You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
+
+--------------------------------
+TASK
+--------------------------------
+From the provided basketball shooting video:
+
+1. Identify every DISTINCT shot attempt.
+2. Identify which of those attempts are MADE shots.
+
+--------------------------------
+DEFINITIONS
+--------------------------------
+- "Shot attempt":
+  - A deliberate shooting motion TOWARD the basket where:
+    - The player gathers the ball,
+    - Moves through a shooting motion, and
+    - RELEASES the ball from their hands TOWARD the hoop.
+  - EXCLUDE passes, lobs, fakes, dribbles, unclear releases.
+
+- "Made shot":
+  - Only if the ball CLEARLY goes through the hoop.
+  - If unclear → count as attempt only.
+
+--------------------------------
+STRICT OUTPUT FORMAT
+--------------------------------
 {
-  "role": "EXPERT_BASKETBALL_ANALYST",
-  "task": "PRECISION_SHOOTING_METRICS_BY_INTERVAL",
-  "objective": "Analyze the video in 5-second distinct intervals. Count shot attempts and made shots for each interval, then aggregate for the final total.",
- 
-  "PROCESSING_RULES": {
-    "segmentation_strategy": "Divide the video into rigid 5-second chunks (00:00-00:05, 00:05-00:10, etc.).",
-    "attribution_rule": "A shot belongs to the interval where the BALL RELEASE occurs. If a player releases at 00:04 but the ball goes in at 00:06, count both the attempt and the make in the 00:00-00:05 interval.",
-    "uncertainty_rule": "If visibility is obstructed or if the ball release is not perfectly clear, DO NOT COUNT."
-  },
- 
-  "DEFINITIONS": {
-    "SHOT_ATTEMPT": {
-      "definition": "A deliberate shooting motion where the ball is RELEASED.",
-      "action": "Count as 1 attempt in the current time interval."
-    },
-    "MADE_SHOT": {
-      "definition": "A shot attempt that successfully goes through the hoop.",
-      "visual_cues": ["Ball clears the rim and passes through the net."],
-      "action": "Count as 1 make in the current time interval."
-    }
-  },
- 
-  "OUTPUT_FORMAT": {
-    "type": "STRICT_JSON",
-    "schema": {
-      "intervals": [
-        {
-          "time_range": "00:00 - 00:05",
-          "attempts": 0,
-          "makes": 0
-        },
-        {
-          "time_range": "00:05 - 00:10",
-          "attempts": 0,
-          "makes": 0
-        }
-        // Continue for the duration of the video
-      ],
-      "final_stats": {
-        "total_attempts": 0,
-        "total_makes": 0
-      }
-    }
-  },
- 
-  "VALIDATION_RULES": [
-    "1. 'final_stats.total_attempts' MUST be the exact sum of 'attempts' in all intervals.",
-    "2. 'final_stats.total_makes' MUST be the exact sum of 'makes' in all intervals.",
-    "3. Ensure every second of the video is covered by an interval.",
-    "4. Do NOT include conversational text, markdown, or explanations. ONLY return the JSON."
-  ]
+  "shots_attempted": { "total": 0 },
+  "shots_made": { "total": 0 }
 }
+
+--------------------------------
+RULES
+--------------------------------
+- No guessing.
+- shots_made.total <= shots_attempted.total
+- If unclear → do not count.
 """
 
 LOG_DIR = "logs"
@@ -70,7 +58,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 st.title("⚡ Gemini Video Test (Minimal Mode)")
 st.write("Upload a video and compare Gemini 2.5 Pro vs Gemini 3 Preview outputs.")
 
-video = st.file_uploader("Upload MP4 video", type=["mp4"])
+video = st.file_uploader("Upload a training video:", type=["mp4", "mov", "avi"])
 
 if st.button("Run Analysis"):
 
@@ -117,12 +105,14 @@ if st.button("Run Analysis"):
     r = results["gemini_2_5_pro"]
     st.write(f"Latency: **{r['latency']} sec**")
     st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300)
+    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25")
+
 
     st.subheader("🚀 Gemini 3 Pro Preview Output")
     r = results["gemini_3_pro_preview"]
     st.write(f"Latency: **{r['latency']} sec**")
     st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300)
+    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
+
 
     st.code(f"Logs saved at: {session_dir}")
