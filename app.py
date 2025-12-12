@@ -33,16 +33,8 @@ DEFINITIONS
   - EXCLUDE passes, lobs, fakes, dribbles, unclear releases.
 
 - "Made shot":
-  - A shot attempt is considered MADE if the ball EVENTUALLY passes through
-    the hoop from above, regardless of:
-      - Rim contact,
-      - Backboard contact,
-      - Multiple bounces,
-      - Time spent on or around the rim.
-  - The ONLY requirement is that the ball finishes by passing downward
-    through the hoop.
-  - Clean swishes, rim-ins, bank shots, and rattled shots ALL count as made shots.
-  - If the final outcome cannot be reasonably determined → count as attempt only.
+  - Only if the ball CLEARLY goes through the hoop.
+  - If unclear → count as attempt only.
 
 --------------------------------
 STRICT OUTPUT FORMAT
@@ -62,6 +54,7 @@ RULES
 
 # - "Made shot":
 #   - Only if the ball CLEARLY goes through the hoop.
+#   - This includes clean swishes, rim-ins, bank shots, and rattled shots.
 #   - If unclear → count as attempt only.
 
 LOG_DIR = "logs"
