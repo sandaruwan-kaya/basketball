@@ -1,0 +1,5 @@
+#for mov:
+    "mimeType": "video/quicktime"
+#for mp4:
+    "mimeType": "video/mp4"
+

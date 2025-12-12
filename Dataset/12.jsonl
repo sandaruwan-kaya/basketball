@@ -1,0 +1,26 @@
+{
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "fileData": {
+            "mimeType": "video/quicktime",
+            "fileUri": "gs://kayagemini/videos/12.MOV"
+          }
+        },
+        {
+          "text": "You are an expert basketball shooting coach and video analyst. Count shot attempts and made shots. Return strict JSON with totals and timestamps."
+        }
+      ]
+    },
+    {
+      "role": "model",
+      "parts": [
+        {
+          "text": "{ \"shots_attempted\": { \"total\": 8 }, \"shots_made\": { \"total\": 6 }, \"shot_attempt_events\": [\"00:05\",\"00:10\",\"00:15\",\"00:20\",\"00:23\",\"00:25\",\"00:28\",\"00:32\"], \"shot_made_events\": [\"00:06\",\"00:12\",\"00:16\",\"00:21\",\"00:26\",\"00:33\"] }"
+        }
+      ]
+    }
+  ]
+}
