@@ -105,6 +105,13 @@ if st.button("Run Analysis"):
     with open(os.path.join(session_dir, "results.json"), "w", encoding="utf-8") as f:
         json.dump(results, f, indent=4)
 
+      # Save metadata
+    with open(os.path.join(session_dir, "meta.txt"), "w") as f:
+        # f.write(f"Tester: {tester_name}\n")
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Original Filename: {video.name}\n")
+        # f.write(f"Video File: {video_path}\n")
+
     st.success("Completed! Results logged.")
 
     # -------------------------
