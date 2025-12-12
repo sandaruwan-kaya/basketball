@@ -1,0 +1,104 @@
+# Basketball Shooting Analysis App
+
+A Streamlit-based web application that analyzes basketball shooting technique and counts shots using Google's Gemini AI models. Upload a video of a player shooting, and get detailed feedback on form, shot counts, and coaching tips.
+
+## Features
+
+- **Shot Detection**: Automatically detects and counts shot attempts and makes from uploaded videos.
+- **Technique Analysis**: Provides structured coaching feedback on stance, footwork, release, and more.
+- **Model Comparison**: Compares results from Gemini 2.5 Pro and Gemini 3 Pro Preview models.
+- **Real-time Logging**: Logs analysis progress and results to the terminal.
+- **User-Friendly UI**: Simple Streamlit interface for uploading videos and viewing results.
+
+## Prerequisites
+
+- Python 3.8 or higher
+- Google Gemini API key (set in `.env` file)
+- Virtual environment (recommended)
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sandaruwan-kaya/basketball.git
+   cd basketball
+   ```
+
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   ```
+
+3. Activate the virtual environment:
+   - On Windows:
+     ```bash
+     .\venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Set up environment variables:
+   - Create a `.env` file in the root directory.
+   - Add your Gemini API key:
+     ```
+     GEMINI_API_KEY=your_api_key_here
+     ```
+
+## Usage
+
+1. Run the Streamlit app:
+   ```bash
+   streamlit run app.py
+   ```
+
+2. Open your browser to the provided URL (usually `http://localhost:8501`).
+
+3. Upload a basketball shooting video (MP4 format).
+
+4. View the analysis results, including shot counts, timestamps, and coaching feedback.
+
+## Project Structure
+
+```
+basketball/
+├── app.py                 # Main Streamlit application
+├── gemini_engine.py       # Gemini AI integration and analysis logic
+├── gpt_engine.py          # (Optional) GPT engine for comparison
+├── video_frame_utils.py   # Video processing utilities
+├── requirements.txt       # Python dependencies
+├── courses.json           # Course data (if applicable)
+├── logs/                  # Log files and analysis results
+├── __pycache__/           # Python cache
+└── README.md              # This file
+```
+
+## Configuration
+
+- **API Key**: Ensure `GEMINI_API_KEY` is set in your `.env` file.
+- **Models**: The app uses Gemini 2.5 Pro and Gemini 3 Pro Preview. Adjust in `gemini_engine.py` if needed.
+- **Logging**: Logs are output to the terminal. No file logging is currently enabled.
+
+## Contributing
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes and commit: `git commit -m 'Add feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Open a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Powered by Google's Gemini AI
+- Built with Streamlit
+- Inspired by basketball coaching and AI analysis techniques 
