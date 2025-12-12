@@ -46,6 +46,7 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
         generation_config = {
             "temperature": 0.0,
             "top_p": 0.95,
+            "top_k": 1,
             "max_output_tokens": 8192,
         }
 
