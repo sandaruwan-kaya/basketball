@@ -41,7 +41,9 @@ STRICT OUTPUT FORMAT
 --------------------------------
 {
   "shots_attempted": { "total": 0 },
-  "shots_made": { "total": 0 }
+  "shots_made": { "total": 0 },
+  "shot_attempt_events": [{ "timestamp": "" }],
+  "shot_made_events": [{ "timestamp": "" }],
 }
 
 --------------------------------
@@ -56,6 +58,9 @@ RULES
 #   - Only if the ball CLEARLY goes through the hoop.
 #   - This includes clean swishes, rim-ins, bank shots, and rattled shots.
 #   - If unclear → count as attempt only.
+
+  # "shot_attempt_events": [{ "timestamp": "" }],
+  # "shot_made_events": [{ "timestamp": "" }],
 
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
