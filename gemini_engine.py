@@ -122,3 +122,28 @@ def compare_models(prompt: str, video_bytes: bytes):
         "gemini_2_5_pro": r25,
         "gemini_3_pro_preview": r30
     }
+
+def compare_models_multi_run(prompt, video_bytes, num_runs=5):
+    """
+    Run Gemini Flash (Nano / Banana) multiple times in parallel
+    and return all outputs.
+    """
+
+    results = {}
+
+    with ThreadPoolExecutor(max_workers=num_runs) as executor:
+        futures = {}
+
+        for i in range(num_runs):
+            futures[i] = executor.submit(
+                run_gemini,   # 👈 ONLY change
+                "gemini-2.5-pro",
+                prompt,
+                video_bytes,
+                []
+            )
+
+        for i, future in futures.items():
+            results[f"run_{i+1}"] = future.result()
+
+    return results
