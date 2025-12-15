@@ -228,40 +228,9 @@ def compare_models(prompt, video_bytes):
         "gemini_3_pro_preview": r30
     }
 
-# def compare_models_multi_run(prompt, video_bytes, num_runs=5):
-#     """
-#     Run gemini-2.5-pro-tuned multiple times in parallel
-#     and return all outputs.
-#     """
-
-#     results = {}
-
-#     with ThreadPoolExecutor(max_workers=num_runs) as executor:
-#         futures = {}
-
-#         for i in range(num_runs):
-#             futures[i] = executor.submit(
-#                 run_tuned_gemini,
-#                 prompt,
-#                 video_bytes
-#             )
-
-#         for i, future in futures.items():
-#             results[f"run_{i+1}"] = {
-#                 "model": "gemini-2.5-pro-tuned",
-#                 "raw": future.result(),
-#                 "latency": None,
-#                 "input_tokens": None,
-#                 "output_tokens": None,
-#                 "total_tokens": None,
-#                 "log": []
-#             }
-
-#     return results
-
 def compare_models_multi_run(prompt, video_bytes, num_runs=5):
     """
-    Run Gemini Flash (Nano / Banana) multiple times in parallel
+    Run gemini-2.5-pro-tuned multiple times in parallel
     and return all outputs.
     """
 
@@ -272,13 +241,44 @@ def compare_models_multi_run(prompt, video_bytes, num_runs=5):
 
         for i in range(num_runs):
             futures[i] = executor.submit(
-                run_flash_gemini,   # 👈 ONLY change
+                run_tuned_gemini,
                 prompt,
                 video_bytes
             )
 
         for i, future in futures.items():
-            results[f"run_{i+1}"] = future.result()
+            results[f"run_{i+1}"] = {
+                "model": "gemini-2.5-pro-tuned",
+                "raw": future.result(),
+                "latency": None,
+                "input_tokens": None,
+                "output_tokens": None,
+                "total_tokens": None,
+                "log": []
+            }
 
     return results
+
+# def compare_models_multi_run(prompt, video_bytes, num_runs=5):
+#     """
+#     Run Gemini Flash (Nano / Banana) multiple times in parallel
+#     and return all outputs.
+#     """
+
+#     results = {}
+
+#     with ThreadPoolExecutor(max_workers=num_runs) as executor:
+#         futures = {}
+
+#         for i in range(num_runs):
+#             futures[i] = executor.submit(
+#                 run_flash_gemini,   # 👈 ONLY change
+#                 prompt,
+#                 video_bytes
+#             )
+
+#         for i, future in futures.items():
+#             results[f"run_{i+1}"] = future.result()
+
+#     return results
 
