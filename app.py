@@ -11,7 +11,7 @@ from gemini_engine import compare_models_multi_run
 # -------------------------
 PROMPT = """
 You are an expert basketball shooting coach AND a precise video analyst.
-Your job is to (1) COUNT SHOTS.
+Your job is to COUNT SHOTS.
 
 You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
 
