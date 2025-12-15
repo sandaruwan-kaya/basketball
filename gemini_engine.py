@@ -22,6 +22,12 @@ def log(msg, buffer):
     buffer.append(line)        # send to UI
     return buffer
 
+def slog(msg):
+    timestamp = time.strftime("[%H:%M:%S]")
+    line = f"{timestamp} {msg}"
+    print(line)                # terminal / streamlit backend logs
+
+
 vertexai.init(
     project="inner-doodad-481015-a5",
     location="us-central1"
@@ -34,8 +40,11 @@ TUNED_ENDPOINT = (
 )
 
 def run_tuned_gemini(prompt: str, video_bytes: bytes):
+    slog(f"Starting model: gemini-2.5-pro-tuned")
     model = GenerativeModel(TUNED_ENDPOINT)
 
+    start = time.time()
+    elapsed = round(time.time() - start, 2)
     video_part = Part.from_data(
         mime_type="video/mp4",
         data=video_bytes
@@ -49,7 +58,7 @@ def run_tuned_gemini(prompt: str, video_bytes: bytes):
             "top_k": 1
         }
     )
-
+    slog(f"gemini-2.5-pro-tuned: Model finished in {elapsed} sec")
     return response.text
 
 def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
@@ -187,3 +196,33 @@ def compare_models(prompt, video_bytes):
         "gemini_3_pro_preview": r30
     }
 
+def compare_models_multi_run(prompt, video_bytes, num_runs=5):
+    """
+    Run gemini-2.5-pro-tuned multiple times in parallel
+    and return all outputs.
+    """
+
+    results = {}
+
+    with ThreadPoolExecutor(max_workers=num_runs) as executor:
+        futures = {}
+
+        for i in range(num_runs):
+            futures[i] = executor.submit(
+                run_tuned_gemini,
+                prompt,
+                video_bytes
+            )
+
+        for i, future in futures.items():
+            results[f"run_{i+1}"] = {
+                "model": "gemini-2.5-pro-tuned",
+                "raw": future.result(),
+                "latency": None,
+                "input_tokens": None,
+                "output_tokens": None,
+                "total_tokens": None,
+                "log": []
+            }
+
+    return results

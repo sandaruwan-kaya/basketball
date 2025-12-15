@@ -4,6 +4,7 @@ import os
 import json
 import datetime
 from gemini_engine import compare_models
+from gemini_engine import compare_models_multi_run
 
 # -------------------------
 # Hard-coded prompt here
@@ -81,7 +82,11 @@ if st.button("Run Analysis"):
     st.info("Running models… please wait.")
 
     # Run both Gemini models
-    results = compare_models(PROMPT, video_bytes)
+    # results = compare_models(PROMPT, video_bytes)
+
+    NUM_RUNS = 5
+    results = compare_models_multi_run(PROMPT, video_bytes, NUM_RUNS)
+
 
     # st.subheader("Live Logs")
     # st.text("\n".join(results["gemini_2_5_pro"]["log"]))
@@ -96,17 +101,22 @@ if st.button("Run Analysis"):
     os.makedirs(session_dir, exist_ok=True)
 
     # Save raw outputs
-    with open(os.path.join(session_dir, "raw_g25.txt"), "w", encoding="utf-8") as f:
-        f.write(results["gemini_2_5_pro"]["raw"])
+    # with open(os.path.join(session_dir, "raw_g25.txt"), "w", encoding="utf-8") as f:
+    #     f.write(results["gemini_2_5_pro"]["raw"])
 
-    with open(os.path.join(session_dir, "raw_g25_tuned.txt"), "w", encoding="utf-8") as f:
-        f.write(results["gemini_2_5_pro_tuned"]["raw"])
+    # with open(os.path.join(session_dir, "raw_g25_tuned.txt"), "w", encoding="utf-8") as f:
+    #     f.write(results["gemini_2_5_pro_tuned"]["raw"])
 
-    with open(os.path.join(session_dir, "raw_g30.txt"), "w", encoding="utf-8") as f:
-        f.write(results["gemini_3_pro_preview"]["raw"])
+    # with open(os.path.join(session_dir, "raw_g30.txt"), "w", encoding="utf-8") as f:
+    #     f.write(results["gemini_3_pro_preview"]["raw"])
+    
+    # with open(os.path.join(session_dir, "results.json"), "w", encoding="utf-8") as f:
+    #     json.dump(results, f, indent=4)
 
-    with open(os.path.join(session_dir, "results.json"), "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=4)
+    for run_id, run_result in results.items():
+      with open(os.path.join(session_dir, f"{run_id}_raw_g25_tuned.txt"), "w", encoding="utf-8") as f:
+          f.write(run_result["raw"])
+
 
       # Save metadata
     with open(os.path.join(session_dir, "meta.txt"), "w") as f:
@@ -121,24 +131,36 @@ if st.button("Run Analysis"):
     # DISPLAY RESULTS
     # -------------------------
 
-    st.subheader("🐢 Gemini 2.5 Pro Output")
-    r = results["gemini_2_5_pro"]
-    st.write(f"Latency: **{r['latency']} sec**")
-    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25")
+    # st.subheader("🐢 Gemini 2.5 Pro Output")
+    # r = results["gemini_2_5_pro"]
+    # st.write(f"Latency: **{r['latency']} sec**")
+    # st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
+    # st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25")
 
 
-    st.subheader("🚀 Gemini 3 Pro Preview Output")
-    r = results["gemini_3_pro_preview"]
-    st.write(f"Latency: **{r['latency']} sec**")
-    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
+    # st.subheader("🚀 Gemini 3 Pro Preview Output")
+    # r = results["gemini_3_pro_preview"]
+    # st.write(f"Latency: **{r['latency']} sec**")
+    # st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
+    # st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
 
 
-    st.subheader("🚀 Gemini 2.5 Pro Tuned Output")
-    r = results["gemini_2_5_pro_tuned"]
-    st.write(f"Latency: **{r['latency']} sec**")
-    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25_tuned")
+    # st.subheader("🚀 Gemini 2.5 Pro Tuned Output")
+    # r = results["gemini_2_5_pro_tuned"]
+    # st.write(f"Latency: **{r['latency']} sec**")
+    # st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
+    # st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25_tuned")
+
+    st.subheader("🚀 Gemini 2.5 Pro Tuned – 5 Parallel Runs")
+
+    for run_id, run_result in results.items():
+        st.markdown(f"### {run_id.upper()}")
+        st.text_area(
+            label=f"Raw Output ({run_id})",
+            value=run_result["raw"],
+            height=250,
+            key=f"raw_{run_id}"
+        )
+
 
     st.code(f"Logs saved at: {session_dir}")
