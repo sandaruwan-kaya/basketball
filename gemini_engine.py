@@ -53,13 +53,45 @@ def run_tuned_gemini(prompt: str, video_bytes: bytes):
     response = model.generate_content(
         [video_part, prompt],
         generation_config={
-            "temperature": 0,
-            "top_p": 1,
-            "top_k": 1
+            "temperature": 1,
+            "top_p": 0.95,
+            # "seed": 42,     
+            # "top_k": 1,          
+            "max_output_tokens": 65535  # optional, mirrors UI
         }
     )
     slog(f"gemini-2.5-pro-tuned: Model finished in {elapsed} sec")
     return response.text
+
+def run_flash_gemini(prompt, video_bytes, model_name="gemini-1.5-flash"):
+    start = time.time()
+
+    model = genai.GenerativeModel(model_name)
+
+    video_part = {
+        "mime_type": "video/mp4",
+        "data": video_bytes
+    }
+
+    response = model.generate_content(
+        [video_part, prompt],
+        generation_config={
+            "temperature": 0.2,
+            "response_mime_type": "application/json"
+        }
+    )
+
+    latency = round(time.time() - start, 2)
+
+    return {
+        "model": model_name,
+        "raw": response.text,
+        "latency": latency,
+        "input_tokens": None,
+        "output_tokens": None,
+        "total_tokens": None,
+        "log": []
+    }
 
 def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
     ui_log_buffer = log(f"Starting model: {model_name}", ui_log_buffer)
@@ -196,9 +228,40 @@ def compare_models(prompt, video_bytes):
         "gemini_3_pro_preview": r30
     }
 
+# def compare_models_multi_run(prompt, video_bytes, num_runs=5):
+#     """
+#     Run gemini-2.5-pro-tuned multiple times in parallel
+#     and return all outputs.
+#     """
+
+#     results = {}
+
+#     with ThreadPoolExecutor(max_workers=num_runs) as executor:
+#         futures = {}
+
+#         for i in range(num_runs):
+#             futures[i] = executor.submit(
+#                 run_tuned_gemini,
+#                 prompt,
+#                 video_bytes
+#             )
+
+#         for i, future in futures.items():
+#             results[f"run_{i+1}"] = {
+#                 "model": "gemini-2.5-pro-tuned",
+#                 "raw": future.result(),
+#                 "latency": None,
+#                 "input_tokens": None,
+#                 "output_tokens": None,
+#                 "total_tokens": None,
+#                 "log": []
+#             }
+
+#     return results
+
 def compare_models_multi_run(prompt, video_bytes, num_runs=5):
     """
-    Run gemini-2.5-pro-tuned multiple times in parallel
+    Run Gemini Flash (Nano / Banana) multiple times in parallel
     and return all outputs.
     """
 
@@ -209,20 +272,13 @@ def compare_models_multi_run(prompt, video_bytes, num_runs=5):
 
         for i in range(num_runs):
             futures[i] = executor.submit(
-                run_tuned_gemini,
+                run_flash_gemini,   # 👈 ONLY change
                 prompt,
                 video_bytes
             )
 
         for i, future in futures.items():
-            results[f"run_{i+1}"] = {
-                "model": "gemini-2.5-pro-tuned",
-                "raw": future.result(),
-                "latency": None,
-                "input_tokens": None,
-                "output_tokens": None,
-                "total_tokens": None,
-                "log": []
-            }
+            results[f"run_{i+1}"] = future.result()
 
     return results
+
