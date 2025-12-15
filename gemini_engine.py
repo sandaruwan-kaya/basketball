@@ -5,6 +5,9 @@ import time
 import json
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part
+
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -19,6 +22,35 @@ def log(msg, buffer):
     buffer.append(line)        # send to UI
     return buffer
 
+vertexai.init(
+    project="inner-doodad-481015-a5",
+    location="us-central1"
+)
+
+TUNED_ENDPOINT = (
+    "projects/inner-doodad-481015-a5/"
+    "locations/us-central1/"
+    "endpoints/5678607022044479488"
+)
+
+def run_tuned_gemini(prompt: str, video_bytes: bytes):
+    model = GenerativeModel(TUNED_ENDPOINT)
+
+    video_part = Part.from_data(
+        mime_type="video/mp4",
+        data=video_bytes
+    )
+
+    response = model.generate_content(
+        [video_part, prompt],
+        generation_config={
+            "temperature": 0,
+            "top_p": 1,
+            "top_k": 1
+        }
+    )
+
+    return response.text
 
 def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
     ui_log_buffer = log(f"Starting model: {model_name}", ui_log_buffer)
@@ -30,7 +62,10 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
 
     ui_log_buffer = log(f"{model_name}: Initializing model…", ui_log_buffer)
-    model = genai.GenerativeModel(model_name)
+    if model_name == "gemini-2.5-pro-tuned":
+        model = genai.GenerativeModel(TUNED_ENDPOINT)
+    else:
+        model = genai.GenerativeModel(model_name)
 
     # ---------------------------------------------------------
     # Generation config
@@ -45,7 +80,7 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
     else:
         generation_config = {
             "temperature": 0.0,
-            "top_p": 0.95,
+            "top_p": 1,
             "top_k": 1,
             "max_output_tokens": 8192,
         }
@@ -109,16 +144,46 @@ def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
 #         "gemini_3_pro_preview": r30
 #     }
 
-def compare_models(prompt: str, video_bytes: bytes):
+def compare_models(prompt, video_bytes):
+    with ThreadPoolExecutor() as executor:
+        f_base_25 = executor.submit(
+            run_gemini,
+            "gemini-2.5-pro",
+            prompt,
+            video_bytes,
+            []
+        )
 
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        future_25 = executor.submit(run_gemini, "gemini-2.5-pro", prompt, video_bytes, [])
-        future_30 = executor.submit(run_gemini, "gemini-3-pro-preview", prompt, video_bytes, [])
+        f_tuned = executor.submit(
+            run_tuned_gemini,
+            prompt,
+            video_bytes
+        )
 
-        r25 = future_25.result()
-        r30 = future_30.result()
+        f_gemini_3 = executor.submit(
+            run_gemini,
+            "gemini-3-pro-preview",
+            prompt,
+            video_bytes,
+            []
+        )
+
+    r25 = f_base_25.result()       # already a full dict
+    r30 = f_gemini_3.result()     # already a full dict
+
+    tuned_raw = f_tuned.result()  # STRING → normalize
 
     return {
         "gemini_2_5_pro": r25,
+        "gemini_2_5_pro_tuned": {
+            "model": "gemini-2.5-pro-tuned",
+            "latency": None,
+            "raw": tuned_raw,
+            "input_tokens": None,
+            "output_tokens": None,
+            "total_tokens": None,
+            "log": []
+        },
         "gemini_3_pro_preview": r30
     }
+

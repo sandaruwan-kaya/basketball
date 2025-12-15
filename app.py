@@ -99,6 +99,9 @@ if st.button("Run Analysis"):
     with open(os.path.join(session_dir, "raw_g25.txt"), "w", encoding="utf-8") as f:
         f.write(results["gemini_2_5_pro"]["raw"])
 
+    with open(os.path.join(session_dir, "raw_g25_tuned.txt"), "w", encoding="utf-8") as f:
+        f.write(results["gemini_2_5_pro_tuned"]["raw"])
+
     with open(os.path.join(session_dir, "raw_g30.txt"), "w", encoding="utf-8") as f:
         f.write(results["gemini_3_pro_preview"]["raw"])
 
@@ -131,5 +134,11 @@ if st.button("Run Analysis"):
     st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
     st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
 
+
+    st.subheader("🚀 Gemini 2.5 Pro Tuned Output")
+    r = results["gemini_2_5_pro_tuned"]
+    st.write(f"Latency: **{r['latency']} sec**")
+    st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
+    st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25_tuned")
 
     st.code(f"Logs saved at: {session_dir}")
