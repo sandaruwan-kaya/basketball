@@ -1,0 +1,13 @@
+// v2
+TUNED_ENDPOINT = (
+    "projects/inner-doodad-481015-a5/"
+    "locations/us-central1/"
+    "endpoints/5678607022044479488"
+)
+
+// v7
+TUNED_ENDPOINT = (
+    "projects/inner-doodad-481015-a5/"
+    "locations/us-central1/"
+    "endpoints/3982157337409355776"
+)
