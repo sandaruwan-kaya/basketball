@@ -10,6 +10,7 @@ import time
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
+
 # -----------------------------
 # CONFIG
 # -----------------------------
@@ -138,6 +139,12 @@ async def analyze_video_endpoint(
 
     with open(os.path.join(session_folder, "raw_gemini.txt"), "w", encoding="utf-8") as f:
         f.write(raw)
+
+    with open(os.path.join(session_folder, "meta.txt"), "w") as f:
+        f.write(f"Tester: {tester_name}\n")
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Video Name: {video.filename}\n")
+        f.write(f"Model: gemini-2.5-pro\n")
 
     # -----------------------------
     # TOTAL LATENCY
