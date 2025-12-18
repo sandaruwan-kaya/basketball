@@ -1,110 +1,428 @@
-{
-  "courses": [
-    {
-      "title": "Chelsea Gray – Passing",
-      "description": "Master the fundamentals of passing at an elite level. Learn proper footwork, dribble pickups, peripheral passing, and how to deliver accurate passes under pressure.",
-      "tags": ["Chelsea Gray", "Point Guard", "Passing", "Ball Handling"],
-      "drills": [
-        {
-          "name": "Passing off Exchange",
-          "description": "Focuses on using dribble exchanges to generate passing opportunities. Emphasis on timing, tempo, and accuracy under pressure."
-        },
-        {
-          "name": "Exchange Through the Legs",
-          "description": "Develops ball control and the ability to transition between dribble moves and passes using through-the-legs exchange footwork."
-        },
-        {
-          "name": "Exchange Behind the Back",
-          "description": "Improves behind-the-back exchanges to create passing angles and deception during live actions."
-        },
-        {
-          "name": "Passing off the Dribble",
-          "description": "Teaches making accurate passes directly off the dribble with minimal gather time."
-        },
-        {
-          "name": "3 Dribble Exchange",
-          "description": "Chains multiple dribble transitions before passing. Emphasizes creativity and ball control."
-        },
-        {
-          "name": "Step Through Passing",
-          "description": "Uses step-through footwork to create passing lanes against defenders."
-        },
-        {
-          "name": "Step Through, Spin Outs",
-          "description": "Combines step-throughs and spin moves to maintain balance while delivering passes."
-        },
-        {
-          "name": "Speed Stop, Step Through, Spin Outs",
-          "description": "Adds tempo changes and controlled pivots to improve decision-making when defenders trap."
-        },
-        {
-          "name": "2 Ball Speed Stop, Step Through, Spin Outs",
-          "description": "A two-ball version that improves ambidexterity and ball control during footwork sequences."
-        },
-        {
-          "name": "Pocket Dribble Passing",
-          "description": "Develops pocket dribble control and passing accuracy from tight windows."
-        },
-        {
-          "name": "Behind the Back from Pocket Dribble",
-          "description": "Combines pocket dribble with behind-the-back manipulation before passing."
-        },
-        {
-          "name": "Peripheral Passing",
-          "description": "Trains reading targets without looking directly at them and passing from non-traditional angles."
-        },
-        {
-          "name": "Double Exchange Peripheral Passing",
-          "description": "Adds misdirection and speed with double exchanges before throwing peripheral passes."
-        },
-        {
-          "name": "Double Exchange Behind the Back Passing",
-          "description": "Uses double behind-the-back exchanges to challenge ball control and passing timing."
-        },
-        {
-          "name": "Double Exchange Sequence Behind the Back Passing",
-          "description": "Full sequence combining multiple exchanges behind the back before delivering the pass."
-        }
-      ]
-    },
-
-    {
-      "title": "Marina Mabrey – Stationary Ball Handling",
-      "description": "Develop elite-level tight handle, manipulation moves, and ball control from a stationary position. Build confidence with advanced dribble variations.",
-      "tags": ["Marina Mabrey", "Combo Guard", "Ball Handling"],
-      "drills": [
-        { "name": "Pound Dribbles", "description": "Repetitive pound dribbles to build hand speed and ball control." },
-        { "name": "Pocket Dribbles", "description": "Works on dribbling in tight spaces by keeping the ball in the hip pocket." },
-        { "name": "Push 1,2 Manipulation Series", "description": "Teaches manipulation of defenders using rhythmic dribbles." },
-        { "name": "Push, Pull Pocket Dribbles", "description": "Mixes forward and backward pocket dribbles for control and deception." },
-        { "name": "1,2 Manipulation Cross", "description": "Uses rhythmic dribbles leading into crossovers for misdirection." },
-        { "name": "1,2 Pocket Thrus", "description": "Practices transferring the ball through tight spaces with quick hands." },
-        { "name": "1,2 Pocket Behinds", "description": "Dribble manipulation leading into behind-the-back transfers." },
-        { "name": "1,2 Triple Exchange", "description": "High-speed sequence combining three types of exchanges." },
-        { "name": "Pocket Drops", "description": "Helps create separation with sudden pocket dribble drops." },
-        { "name": "Drop Thrus", "description": "Combines drop footwork with tight dribble control." },
-        { "name": "Split Behinds", "description": "Uses split steps and behind-the-back dribbles for rhythm and deception." },
-        { "name": "Continuous Drop Thrus", "description": "Repetitive drill for continuous footwork + pocket dribble flow." },
-        { "name": "Punch Drag", "description": "Ball manipulation through punch dribble and drag steps." },
-        { "name": "Drag Dribble", "description": "Pulls the ball backward and changes pace to simulate sudden stops." }
-      ]
-    },
-
-    {
-      "title": "Jordin Canada – Full Court Ball Handling",
-      "description": "Develop full-court handling skills with pace, change of direction, and downhill pressure. Ideal for point guards.",
-      "tags": ["Jordin Canada", "Point Guard", "Ball Handling"],
-      "drills": [
-        { "name": "Anchored Steps", "description": "Emphasizes maintaining anchor foot while changing direction." },
-        { "name": "Half Spins", "description": "Improves half-spin footwork and ball protection during turns." },
-        { "name": "Inverted Drags", "description": "Teaches planting and dragging footwork to change direction." },
-        { "name": "Low Crossovers", "description": "Builds tight, low, controlled crossovers to protect the basketball." },
-        { "name": "Punch Drag, Behind the Back", "description": "Combines punch dribble with behind-the-back move for balance and rhythm." },
-        { "name": "Punch Drag, Through the Legs", "description": "Adds between-the-legs variation to punch drag technique." },
-        { "name": "Skip Step, Behind the Back", "description": "Incorporates skip steps with behind-the-back transitions." },
-        { "name": "Skip Step, Through the Legs", "description": "Skip step footwork linked to through-the-legs dribble." },
-        { "name": "Speed Stop, Exchange", "description": "Teaches sudden stopping and quick hand exchanges into dribble attacks." }
-      ]
-    }
-  ]
-}
+[
+  {
+    "course_title": "Chelsea Gray - Passing",
+    "course_description": "Master the fundamentals of passing with Chelsea Gray. In this course, Chelsea focuses on building the essential skills needed to physically make any pass on the floor — from ball control and footwork to hand placement and delivery. Through a series of drills and detailed demonstrations, you’ll strengthen the techniques that form the foundation of great passing. Perfect for players of all positions looking to sharpen their mechanics and expand their passing arsenal.",
+    "tags": [
+      "Chelsea Gray",
+      "Point Guard",
+      "Passing",
+      "Ball Handling"
+    ],
+    "clips": [
+      {
+        "clip_name": "Passing off Exchange",
+        "clip_description": "In this drill, Chelsea will focus on using simple hand exchanges to develop a rhythm that sets up clean, accurate passes. Players will learn how to use the dribble to speed up their pass, simulating in-game, quick decision-making.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Passing+off+Exchange+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Exchange Through the Legs",
+        "clip_description": "In this drill, Chelsea will focus on delivering strong passes after a through-the-legs dribble exchange. The emphasis is on speed and timing—ideal for improving ball control.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Exchange+through+the+Legs+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Exchange Behind the Back",
+        "clip_description": "In this drill, Chelsea will focus on ball control and delivering crisp passes from behind-the-back exchanges. This helps players be able to throw passes from different arm angles.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Exchange+Behind+the+back+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Passing off the Dribble",
+        "clip_description": "In this drill, Chelsea will focus on building passing efficiency using one hand. Off the live dribble, players will improve their ability to make quick, confident reads with minimal wind-up or reset.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Passing+Off+the+Dribble+-+Chelsea+Gray+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "3 Dribble Exchange",
+        "clip_description": "In this drill, Chelsea will focus on chaining together multiple exchange dribbles into a pass. This enhances rhythm, timing, and creativity while challenging your ball handling skills as well.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=3+Dribble+Exchange+-+Chelsea+Gray+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Step Through Passing",
+        "clip_description": "In this drill, Chelsea will focus on using strong footwork to step around contact or pressure before passing. Players will learn to open angles with their body and deliver passes under control through traffic.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Step+Through+Passing+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Step Through, Spin Outs",
+        "clip_description": "In this drill, Chelsea will focus on combining a step-through with a spin-out to a pass. This adds variety to passing angles and helps players stay balanced and creative when trapped or pressured.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&preview=Step+Through+Spin+Outs+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Speed Stop, Step Through, Spin Outs",
+        "clip_description": "In this drill, Chelsea will focus on using a quick speed stop to decelerate before stepping through into a spin-out pass. This teaches players to manage tempo while pivoting and passing.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?e=1&preview=Speed+Stop%2C+Step+Through%2C+Spin+Outs+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1&dl=0"
+      },
+      {
+        "clip_name": "2 Ball Speed Stop, Step Through, Spin Outs",
+        "clip_description": "In this drill, Chelsea will focus on adding a second ball to increase difficulty and control. Players will build coordination, focus, and advanced passing touch while managing two-ball movement and footwork.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=2+Ball+Speed+Stop%2C+Step+Through%2C+Spin+Outs+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Pocket Dribble Passing",
+        "clip_description": "In this drill, Chelsea will focus on pulling the basketball outside her frame into the pocket. This move emphasizes your ability to get the ball wide—ideal for guards working in tight windows or during pick-and-roll action.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Pocket+Dribble+Passing+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Behind the Back from Pocket Dribble",
+        "clip_description": "In this drill, Chelsea will focus on pulling and ripping the basketball around her back. Players will stay in their athletic stance, maintaining balance while manipulating the ball behind them before passing to their target.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Behind+the+Back+from+Pocket+Dribble+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Peripheral Passing",
+        "clip_description": "In this drill, Chelsea will focus on building vision and awareness through exaggerated side-angle passes. Players will train their peripheral reads and reactions to be able to pass on target high or low from that side angle.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Peripheral+Passing+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Double Exchange Peripheral Passing",
+        "clip_description": "In this drill, Chelsea will focus on challenging her ball handling and passing while keeping eyes up and vision wide. The emphasis is on body control and delivering accurate passes high or low from that side angle.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Double+Exchange+Peripheral+Passing+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Double Exchange Behind the Back Passing",
+        "clip_description": "In this drill, Chelsea will focus on challenging her ball handling and passing while keeping eyes up and vision wide. The emphasis is on body control and delivering accurate passes from whipping the ball behind her back.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Double+Exchange+Behind+the+Back+Passing+-+Chelsea+Gray+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Double Exchange Sequence Behind the Back Passing",
+        "clip_description": "In this advanced drill, Chelsea will focus on integrating full sequences of exchange moves while keeping her head up and delivering clean passes. This is a challenging segment that will help with your ball handling and passing ability.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ALND6G6nnih7-yY_Bva5ubg/PLAYERS/CHELSEA%20GRAY%20-%20PASSING?dl=0&e=1&preview=Double+Exchange+Sequence+Behind+the+Back+Passing+-+Chelsea+Gray.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      }
+    ]
+  },
+  {
+    "course_title": "Marina Mabrey - Stationary Ball Handling",
+    "course_description": "A stationary ball handling course you can do anywhere — perfect for refining control, rhythm, and manipulation. Marina focuses on key concepts like arm extension, ball placement, footwork, and creativity to help build the foundation of elite-level handle, even in tight spaces.",
+    "tags": [
+      "Marina Mabrey",
+      "Combo Guard",
+      "Ball Handling"
+    ],
+    "clips": [
+      {
+        "clip_name": "Pound Dribbles",
+        "clip_description": "In this drill, Marina will focus on maximizing ball control by using full-arm extension and aggressive, deliberate pound dribbles. The goal is to drive the ball into the ground with power and consistency, reinforcing control and strength in your dominant and non-dominant hands.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Pound+Dribbles+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Pocket Dribbles",
+        "clip_description": "In this drill, Marina will focus on building tight, efficient handle by pulling the ball into the hip pocket. This movement trains players to keep control in tight spaces and protects the ball from defenders by shifting it just outside the frame at hip level.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Pocket+Dribbles+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Push 1,2 Manipulation Series",
+        "clip_description": "In this drill, Marina will focus on refining ball placement through deliberate push dribbles using 1-2 rhythms. This teaches players how to manipulate the ball across their body with intention, setting up future moves with rhythm and control.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Push+1%2C2+Manipulation+Series+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Push, Pull Pocket Dribbles",
+        "clip_description": "In this drill, Marina will focus on developing timing and flow by pushing the ball across the body and pulling it into the pocket. This push-pull rhythm trains spatial awareness and strengthens both lateral movement and control.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Push%2C+Pull+Pocket+Dribbles+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "1,2 Manipulation Cross",
+        "clip_description": "In this drill, Marina will focus on enhancing crossover control by exaggerating ball placement across the frame. Players will work on making every dribble purposeful, with sharp 1-2 rhythm and focused hand positioning.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=1%2C2+Manipulation+Cross+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "1,2 Pocket Throughs",
+        "clip_description": "In this drill, Marina will focus on smooth transitions around the body by combining pocket pulls and through-the-leg movements. This builds rhythm and control while encouraging creativity and body flow.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=1%2C2+Cross+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "1,2 Pocket Behinds",
+        "clip_description": "In this drill, Marina will focus on developing behind-the-back ball control without carrying. The goal is clean, legal manipulation by pulling the ball into the pocket and smoothly swinging it behind your body.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=1%2C2+Behind-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "1,2 Triple Exchange",
+        "clip_description": "In this drill, Marina will focus on creativity and ball feel by executing a triple exchange sequence. This teaches players how to link moves fluidly while keeping control and balance through advanced combinations.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=1%2C2+Triple+Exchange+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Pocket Drops",
+        "clip_description": "In this drill, Marina will focus on establishing a strong foundational stance while dropping the ball into the hip pocket. This movement reinforces core stability and places the player in a position to attack or react quickly.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Pocket+Drop+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Drop Through",
+        "clip_description": "In this drill, Marina will focus on combining footwork and ball control by stepping into space while maneuvering the ball through the legs. This teaches players to create space around imaginary defenders with pace and balance.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Drop+Through+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Split Behinds",
+        "clip_description": "In this drill, Marina will focus on syncing footwork with behind-the-back movement from a drop stance. Players will learn to time their steps with their dribble to maintain explosiveness and control under pressure.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Split+Behind+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Continuous Drop Through",
+        "clip_description": "In this drill, Marina will focus on foot speed and consistent ball handling through a series of continuous drop-through movements. This challenges players to maintain posture, choppy feet, and ball placement through sustained effort.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Continious+Drop+Through+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Punch Drag",
+        "clip_description": "In this drill, Marina will focus on rhythm and change of pace by punching the ball forward and then dragging it back with the same-side foot and hand. This simulates stopping on a dime and resetting into a stable position.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Punch+Drag+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Drag Dribble",
+        "clip_description": "In this drill, Marina will focus on pulling the ball back into space while dragging the back foot in a controlled break. This move helps players shift gears, change directions, and reset the possession with balance.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ACcrldE6gBwjy4rlsh_tvU8/PLAYERS/MARINA%20MABREY%20-%20BALL%20HANDLING?dl=0&preview=Drag+Dribble+-+Marina+Mabrey.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "(Rep Count or Time Duration for each clip can be filled in after)",
+        "clip_description": "",
+        "clip_link": ""
+      }
+    ]
+  },
+  {
+    "course_title": "Jordin Canada - Full Court Ball Handling",
+    "course_description": "This ball handling course is designed for players looking to sharpen their handle on the move — especially in open court situations and under pressure. Jordin goes through footwork patterns and ball control techniques that help players stay poised, maintain pace, and confidently break pressure. The series builds the tools necessary to navigate defenders, change speeds, and flow directly into offensive actions or scoring opportunities in transition.",
+    "tags": [
+      "Jordin Canada",
+      "Point Guard",
+      "Ball Handling"
+    ],
+    "clips": [
+      {
+        "clip_name": "Anchored Steps",
+        "clip_description": "In this drill, Jordin focuses on keeping her feet anchored to the floor while changing directions. The emphasis is on staying low, controlling pace, and making sharp, efficient dribbles without extra steps. Players will learn how to change direction while remaining balanced and ready to explode.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Anchored+Steps+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Half Spins",
+        "clip_description": "Jordin demonstrates the half spin, emphasizing shuffling the feet (rather than stepping) to stay tight and under control. She also uses her body to shield the basketball during the spin. Players will focus on the cadence of their dribble and the importance of dropping the ball between their frame at the point of the spin for maximum protection.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Half+Spin+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Inverted Drags",
+        "clip_description": "In this drill, Jordin works on planting the inside foot firmly — without skipping — and anchoring her position before pulling the basketball back to create space. Players will develop the ability to stop momentum, control the ball, and redirect efficiently in different situations while being pressured.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Inverted+Drag+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Low Crossovers",
+        "clip_description": "Jordin emphasizes a controlled, low crossover that is more of a tight pull-back across the body rather than a wide, sweeping motion. The focus is on changing direction with minimal exposure of the ball, staying low to the ground to protect the handle.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Low+Crossovers+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Punch Drag, Behind the Back",
+        "clip_description": "In this drill, Jordin focuses on punching the ball straight down to stop on the ball-side foot. She’ll then quickly flip her feet and hips, using a behind-the-back dribble to change direction and reset the attack. This sequence trains balance, pace change, and ball protection.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Punch+Drag+Behind+the+Back+-+Jordin+Canada+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Punch Drag, Through the Legs",
+        "clip_description": "Building on the punch drag, Jordin replaces the behind-the-back with a through-the-legs exchange. The key again is stopping on the ball-side foot, immediately switching her feet, and smoothly transitioning into the through-the-legs dribble to change direction while keeping rhythm and control.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Punch+Drag+Through+the+legs+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Skip Step, Behind the Back",
+        "clip_description": "Here, Jordin introduces the skip step — pushing/skipping off the inside foot while opening up her stance to change direction. The focus is on making the behind-the-back dribble sharp and direct, avoiding ball wrapping. Players will work on timing their skip with the dribble to stay efficient and balanced.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Skip+Step+Behind+the+Back+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Skip Step, Through the Legs",
+        "clip_description": "Jordin again uses the skip step but finishes with a through-the-legs exchange. The emphasis is on syncing the ball hitting the floor simultaneously with the feet landing, ensuring a clean hand exchange and immediate change of direction.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Skip+Step+Through+the+Legs+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Speed Stop, Exchange",
+        "clip_description": "In this drill, Jordin works on the speed stop — a quick 1-2 footwork pattern to decelerate abruptly. She simultaneously exchanges the ball behind her back, then rises up slightly before dropping back down to explode into the new direction. This sequence teaches control, deception, and re-acceleration.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Speed+Stop+Exchange+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Spin Seals",
+        "clip_description": "Jordin finishes the course by focusing on the spin seal — a move that requires proper footwork and body positioning to protect the ball and create leverage during a spin. The focus is on pounding the basketball straight down at the same time both feet hit the ground during the spin, ensuring stability and control while sealing off the defender.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJMe1VY_Ebc70p5x3gtW-zE/PLAYERS/JORDIN%20CANADA?dl=0&preview=Spin+Seal+-+Jordin+Canada.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      }
+    ]
+  },
+  {
+    "course_title": "Skylar Diggins - Finishing",
+    "course_description": "A finishing course designed to help you master the art of scoring around the basket — no matter your size. Skylar focuses on footwork, body control, and timing to create space, absorb contact, and finish creatively through traffic. From power moves to finesse finishes, this course will expand your ability to read defenders and convert at the rim in a variety of ways.",
+    "tags": [
+      "Skylar Diggins",
+      "Point Guard",
+      "Finishing",
+      "Ball Handling"
+    ],
+    "clips": [
+      {
+        "clip_name": ") Same Foot, Same Hand",
+        "clip_description": "In this drill, Skylar focuses on finishing with the same hand and foot, using a quick scoop motion to get the ball up and away from her frame. Players will learn how to fully extend away from their defender and finish efficiently taking away the last traditional finishing step.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Same+Foot+Same+Hand+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Euro Step",
+        "clip_description": "In this drill, Skylar emphasizes slowing down in the paint to make smart, controlled changes of direction. Players will learn how to master the timing of the dribble and synchronize their body and ball movement to navigate around defenders.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Euro+Step+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Veer Finish",
+        "clip_description": "In this drill, Skylar focuses on controlled footwork and body positioning to veer into space. Players will learn how to visualize defensive coverage and adjust their pickups for a variety of finishing angles and situations.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Veer+Finish+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Power Finish",
+        "clip_description": "In this drill, Skylar highlights the footwork and strength needed to create contact and finish through it. Players will learn how to establish a strong base, absorb contact, and stay balanced through the shot.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Power+Finishes+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Inside Hand Skip Steps",
+        "clip_description": "In this drill, Skylar focuses on using skip steps to cover ground and create separation. Players will learn how to fully extend their elbow and finish with the inside hand, making it harder for defenders to contest.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Inside+Hang+Skips+Steps+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Runners",
+        "clip_description": "In this drill, Skylar works on quick pickups and touch finishes in the lane. Players will learn how to develop their touch through footwork and timing.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Runners+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Pivot Finish",
+        "clip_description": "In this drill, Skylar focuses on using pivots from a strong base to open up finishing angles. Players will learn how to stop on balance and utilize triple-threat pivot options to change directions into their finish.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Pivot+Finishing+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Controlled Fade",
+        "clip_description": "In this drill, Skylar emphasizes maintaining balance through the fadeaway. Players will learn how to pivot, elevate, and control their body to shoot a consistent fade with proper arc and touch.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJljzJH5L4WDwH42BcxWRYI/PLAYERS/SKYLAR%20DIGGINS?dl=0&preview=Controlled+Fade+-+Skylar.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      }
+    ]
+  },
+  {
+    "course_title": "Rhyne Howard - 3-Level Scoring",
+    "course_description": "A complete scoring course designed to master all three levels—finishing at and around the rim, mid-range efficiency, and 3 point shooting off the dribble. Rhyne focuses on key concepts like footwork, body control, shot creation, and separation to help players develop a versatile and unguardable offensive skill set",
+    "tags": [
+      "Rhyne Howard",
+      "Wing",
+      "Ball Handling",
+      "Shooting",
+      "Finishing",
+      "Midrange"
+    ],
+    "clips": [
+      {
+        "clip_name": "Same Foot, Same Hand Finish off Lateral Bounds (Level 1)",
+        "clip_description": "In this drill, Rhyne focuses on moving laterally with a bound movement, flowing into a same-foot, same-hand finish. Players will learn how to control the ball outside their frame while mastering the timing of this quick finish, which eliminates the traditional last step of a layup.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Same+Foot+Same+Hand+-+Rhyne+Howard+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Two-Foot Floaters (Level 1)",
+        "clip_description": "In this drill, Rhyne emphasizes shooting floaters off two feet. Players will develop proper footwork and balance while working on touch finishes.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Two+Foot+Floater+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Second-Step Extended Finishing (Level 1)",
+        "clip_description": "In this drill, Rhyne focuses on extending the ball away from her frame. The drill starts with a foot switch at the elbow before attacking across the midline. Players will learn how to pick up the ball away from the defender and smoothly flow into the finish.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Second+Step+Extend+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Inside-Outside Extended Finish (Level 1)",
+        "clip_description": "In this drill, Rhyne emphasizes keeping the defender on her back while extending the ball away from pressure. Players will learn how to shield their defender and transition into protective footwork, finishing at the rim.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Inside+Outside+Extend+Finish+-Rhyne+Howard+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "In & Outs into 1-2 Pull-Ups (Level 2)",
+        "clip_description": "In this drill, Rhyne focuses on maintaining grounded footwork while executing shifty in-and-out dribbles into her jump shot. Players will learn how to create separation from defenders and immediately flow into precise pull-up jump shot footwork.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=In+And+Out+1%2C2+Pull+Up+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Shimmy Punch Drags off the Catch (Level 2)",
+        "clip_description": "In this drill, Rhyne works on deception off the catch, attacking the elbow before stopping sharply on her ball-side foot. Players will learn how to stop quickly, replace their feet, and flow seamlessly into their jump shot.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Shimmy+Punch+-+Rhyne+Howard+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Run-Outs (Level 2)",
+        "clip_description": "In this drill, Rhyne emphasizes gaining separation and attacking open spaces using sharp footwork. Players will learn how to “run” away from defenders and transition quickly into their jump shot.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Run+Outs+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Speed Stop Exchange & Inverted Drags (Level 2)",
+        "clip_description": "In this drill, Rhyne focuses on stopping quickly to create space from an attacking position. Players will learn how to execute smooth ball exchanges into their opposite hand while maintaining control and rhythm for their jump shot.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Speed+Stop+Exchange+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Shooting off Lateral Bounds (Level 3)",
+        "clip_description": "In this drill, Rhyne emphasizes lateral movement, hanging the ball away from her frame, and then cleanly picking it up for the shot. Players will learn how to create space off the dribble while finding rhythm through the correct footwork.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Shooting+Off+Lateral+Bounds+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Shooting off Side Steps (Level 3)",
+        "clip_description": "In this drill, Rhyne focuses on creating quick space while maintaining fluidity into her shot. Players will develop the ability to stay in an athletic stance and execute the proper footwork required for this advanced shooting technique.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Shooting+Off+Side+Steps+-+Rhyne+Howard+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Shooting off Foot Replacements (Level 3)",
+        "clip_description": "In this drill, Rhyne emphasizes clean footwork and controlled pickups leading into her shot. Players will learn how to efficiently set their feet and be ready to shoot comfortably off the dribble.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Foot+Replacement+3s+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": ") Look Away 3s (Level 3)",
+        "clip_description": "In this drill, Rhyne focuses on using eye manipulation in transition to create space for a clean shot. Players will learn how to throw off defenders by looking away from the basket before quickly gathering into their shot. This is a great tool for adding a crafty and unpredictable perimeter weapon to your game.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Look+Away+Transition+3%27s+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Freestyle (All Levels)",
+        "clip_description": "In this drill, Rhyne encourages creativity and freedom of movement. Players will explore different handles and shot-making opportunities, learning to think outside the box while enjoying the process.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/AJh55Vtd3WUtyRIP8x2Zl1Y/PLAYERS/RHYNE%20HOWARD?dl=0&preview=Freestyle+-+Rhyne+Howard.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      }
+    ]
+  },
+  {
+    "course_title": "Courtney Williams - Midrange",
+    "course_description": "Courtney Williams breaks down the footwork, timing, and elevation needed to be a true midrange threat. From quick 1-2 pull-ups to controlled fades and step-backs, this course teaches you how to get to your spots and rise with confidence—no matter the defender. The midrange is often overlooked, but it’s one of the most effective ways to punish defensive gaps and score when the paint is crowded and the three-point line is covered. If you want to dominate the in-between game, this is your blueprint.",
+    "tags": [
+      "Courtney Williams",
+      "Combo Guard",
+      "Shooting"
+    ],
+    "clips": [
+      {
+        "clip_name": "Getting Off the Floor",
+        "clip_description": "In this drill, Courtney focuses on using explosive lift to rise quickly into her jumper. Players will learn how to elevate off the floor with energy and control, simulating game-like midrange looks.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Getting+Off+the+Floor+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Condensing 1,2 Pull-Up",
+        "clip_description": "In this drill, Courtney focuses on tightening her 1,2 footwork into a smaller space to get into her shot quicker. Players will learn how to stay low and compact while maintaining rhythm in tight areas.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Condensing+1%2C2+Pull+up+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "2 Dribble Pull-Up",
+        "clip_description": "In this drill, Courtney focuses on using two dribbles to set up her midrange jumper. Players will learn how to build momentum, time their dribble pickup, and stop on a dime to rise into a balanced pull-up.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=2+dribble+pull+up+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Controlled Fade",
+        "clip_description": "In this drill, Courtney focuses on raising up and creating separation away from her defender without losing balance. Players will learn how to use body control and hang time to generate space and shoot consistently.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Controlled+Fade-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "2 Dribble Controlled Fade",
+        "clip_description": "In this drill, Courtney focuses on combining two dribbles with a controlled fade to create space. Players will learn how to move with intent, get to a spot, and rise up into a drifting jumper with balance.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=2+dribble+control+fade+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Midrange off the Bound",
+        "clip_description": "In this drill, Courtney focuses on using a bound or lateral movement to flow into her midrange shot. Players will learn how to generate rhythm through footwork and use quick lift to get into their jumper efficiently.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Midrange+off+the+bound+-+Courtney+Williams.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Lateral Side Steps",
+        "clip_description": "In this drill, Courtney focuses on using a lateral sidestep to create space. Players will learn how to push out sideways and pick the ball up simultaneously with their final step to rise quickly into their shot.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Lateral+side+steps+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      },
+      {
+        "clip_name": "Step Backs",
+        "clip_description": "In this drill, Courtney focuses on creating separation with midrange step-backs. Players will learn how to generate force, control their momentum, and elevate into a clean, balanced jumper.",
+        "clip_link": "https://www.dropbox.com/scl/fo/mwbiyh14n5zfj6owwpyhk/ANaV_UoxR1VSz_Z0iCZBWDc/PLAYERS/COURTNEY%20WILLIAMS?dl=0&preview=Step+Backs+-+Courtney+Williams+.mp4&rlkey=ksb2yb5smfj7xjb615gtmb9zf&subfolder_nav_tracking=1"
+      }
+    ]
+  },
+  {
+    "course_title": "Sabrina Ionescu - Shooting",
+    "course_description": "",
+    "tags": [
+      "Sabrina Ionescu",
+      "Combo Guard",
+      "Shooting"
+    ],
+    "clips": []
+  }
+]

@@ -1,149 +1,153 @@
 import google.generativeai as genai
 import base64
 import os
-import time
 import json
 from dotenv import load_dotenv
-from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# -------------------------------------------
-# SIMPLE LOGGER
-# -------------------------------------------
-def log(msg, buffer):
-    timestamp = time.strftime("[%H:%M:%S]")
-    line = f"{timestamp} {msg}"
-    print(line)                # terminal / streamlit backend logs
-    buffer.append(line)        # send to UI
-    return buffer
+MODEL_NAME = "gemini-2.5-pro"
+
+# -----------------------------
+# VIDEO ANALYSIS PROMPT
+# -----------------------------
+PROMPT = """
+You are an expert basketball shooting coach AND a precise video analyst.
+Your job is to (1) COUNT SHOTS.
+
+You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
+
+--------------------------------
+TASK
+--------------------------------
+From the provided basketball shooting video:
+
+1. Identify every DISTINCT shot attempt.
+2. Identify which of those attempts are MADE shots.
+
+--------------------------------
+STRICT OUTPUT FORMAT
+--------------------------------
+{
+  "shots_attempted": { "total": 0 },
+  "shots_made": { "total": 0 },
+  "shot_attempt_events": [{ "timestamp": "" }],
+  "shot_made_events": [{ "timestamp": "" }],
+  "coaching_feedback": {
+    "summary": "",
+    "stance_and_balance": "",
+    "footwork": "",
+    "ball_gather_and_set_point": "",
+    "release_and_follow_through": "",
+    "timing_and_rhythm": "",
+    "shot_arc_and_power": "",
+    "consistency": "",
+    "shot_selection": "",
+    "areas_to_improve": [],
+    "limitations_in_video": []
+  }
+}
+
+--------------------------------
+RULES
+--------------------------------
+- No guessing.
+- shots_made.total <= shots_attempted.total
+"""
+
+# -----------------------------
+# JSON PARSER
+# -----------------------------
+def try_parse_json(raw_text: str):
+    raw = raw_text.strip()
+    try:
+        return json.loads(raw)
+    except:
+        pass
+
+    if "```" in raw:
+        try:
+            cleaned = raw.split("```")[1]
+            cleaned = cleaned.replace("json", "").strip()
+            return json.loads(cleaned)
+        except:
+            pass
+
+    return None
 
 
-def run_gemini(model_name: str, prompt: str, video_bytes: bytes, ui_log_buffer):
-    ui_log_buffer = log(f"Starting model: {model_name}", ui_log_buffer)
-
-    # ---------------------------------------------------------
-    # Base64 encode
-    # ---------------------------------------------------------
-    ui_log_buffer = log(f"{model_name}: Encoding video to base64…", ui_log_buffer)
+# -----------------------------
+# VIDEO ANALYSIS
+# -----------------------------
+def analyze_video_raw(video_bytes: bytes):
     video_base64 = base64.b64encode(video_bytes).decode("utf-8")
-
-    ui_log_buffer = log(f"{model_name}: Initializing model…", ui_log_buffer)
-    model = genai.GenerativeModel(model_name)
-
-    # ---------------------------------------------------------
-    # Generation config
-    # ---------------------------------------------------------
-    if model_name == "gemini-2.5-pro":
-        generation_config = {
-            "temperature": 0.0,
-            "top_p": 1.0,
-            "top_k": 1,
-            "max_output_tokens": 8192,
-        }
-    else:
-        generation_config = {
-            "temperature": 0.0,
-            "top_p": 0.95,
-            "top_k": 1,
-            "max_output_tokens": 8192,
-        }
-
-    ui_log_buffer = log(f"{model_name}: Calling Gemini API… this may take a while.", ui_log_buffer)
-    start = time.time()
+    model = genai.GenerativeModel(MODEL_NAME)
 
     response = model.generate_content(
         [
-            prompt,
+            PROMPT,
             {"mime_type": "video/mp4", "data": video_base64}
-        ],
-        generation_config=generation_config
+        ]
     )
 
-    elapsed = round(time.time() - start, 2)
-    ui_log_buffer = log(f"{model_name}: Model finished in {elapsed} sec", ui_log_buffer)
+    raw = response.text or ""
+    parsed = try_parse_json(raw)
 
-    # ---------------------------------------------------------
-    # Extract raw text
-    # ---------------------------------------------------------
-    ui_log_buffer = log(f"{model_name}: Extracting response text…", ui_log_buffer)
-    raw = ""
-    try:
-        raw = response.text
-    except:
-        try:
-            raw = response.candidates[0].content.parts[0].text
-        except:
-            raw = ""
+    if parsed is None:
+        raise ValueError("Failed to parse Gemini video analysis")
 
-    # ---------------------------------------------------------
-    # Token usage
-    # ---------------------------------------------------------
-    usage = getattr(response, "usage_metadata", None)
-    input_tokens = usage.prompt_token_count if usage else 0
-    output_tokens = usage.candidates_token_count if usage else 0
-
-    ui_log_buffer = log(f"{model_name}: Completed parsing output.", ui_log_buffer)
-
-    return {
-        "model": model_name,
-        "latency": elapsed,
-        "raw": raw,
-        "input_tokens": input_tokens,
-        "output_tokens": output_tokens,
-        "total_tokens": input_tokens + output_tokens,
-        "log": ui_log_buffer,
-    }
+    return parsed, raw
 
 
-# def compare_models(prompt: str, video_bytes: bytes):
-#     # shared log buffer for UI
-#     ui_log_buffer = []
+# -----------------------------
+# CLIP RECOMMENDATION (TEXT ONLY)
+# -----------------------------
+def recommend_clips_with_gemini(analysis_json: dict, courses_json: list):
+    model = genai.GenerativeModel(MODEL_NAME)
 
-#     r25 = run_gemini("gemini-2.5-pro", prompt, video_bytes, ui_log_buffer.copy())
-#     r30 = run_gemini("gemini-3-pro-preview", prompt, video_bytes, ui_log_buffer.copy())
+    prompt = f"""
+You are a professional basketball skills coach.
+ 
+Your task is to recommend relevant training clips for a player based specifically on their "Areas to Improve".
+ 
+You will be given:
+1) PLAYER_ANALYSIS (JSON) - Pay special attention to "coaching_feedback" -> "areas_to_improve".
+2) COURSE_CATALOG (JSON) - A list of available courses and their clips.
+ 
+MANDATORY RULES:
+- You MUST select clips based ONLY on the context of "areas_to_improve" found in the PLAYER_ANALYSIS.
+- For each recommendation, analyze the combination of Course Title, Course Description, Clip Name, and Clip Description from the COURSE_CATALOG to find the most relevant matches for the player's specific improvement needs.
+- Recommend ONLY the clips that are highly compatible and convenient for the identified improvement areas.
+- You can recommend a MAXIMUM of 5 clips. Do not exceed 5.
+- You do NOT need to provide 5 clips if fewer (or none) are truly relevant. Only provide those that genuinely match the context.
+- DO NOT invent clips or modify names/links.
+- Output MUST be valid JSON only.
+ 
+OUTPUT FORMAT:
+{{
+  "recommended_clips": [
+    {{
+      "course_title": "",
+      "clip_name": "",
+      "clip_link": "",
+      "reason": "Explain how this specific clip addresses one or more items in the 'areas_to_improve' context."
+    }}
+  ]
+}}
+ 
+PLAYER_ANALYSIS:
+{json.dumps(analysis_json, indent=2)}
+ 
+COURSE_CATALOG:
+{json.dumps(courses_json, indent=2)}
+"""
 
-#     return {
-#         "gemini_2_5_pro": r25,
-#         "gemini_3_pro_preview": r30
-#     }
+    response = model.generate_content(prompt)
+    raw = response.text.strip()
+    parsed = try_parse_json(raw)
 
-def compare_models(prompt: str, video_bytes: bytes):
+    if parsed is None:
+        raise ValueError("Failed to parse Gemini clip recommendations")
 
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        future_25 = executor.submit(run_gemini, "gemini-2.5-pro", prompt, video_bytes, [])
-        future_30 = executor.submit(run_gemini, "gemini-3-pro-preview", prompt, video_bytes, [])
-
-        r25 = future_25.result()
-        r30 = future_30.result()
-
-    return {
-        "gemini_2_5_pro": r25,
-        "gemini_3_pro_preview": r30
-    }
-
-def compare_models_multi_run(prompt, video_bytes, num_runs=5):
-    """
-    Run Gemini Flash (Nano / Banana) multiple times in parallel
-    and return all outputs.
-    """
-
-    results = {}
-
-    with ThreadPoolExecutor(max_workers=num_runs) as executor:
-        futures = {}
-
-        for i in range(num_runs):
-            futures[i] = executor.submit(
-                run_gemini,   # 👈 ONLY change
-                "gemini-2.5-pro",
-                prompt,
-                video_bytes,
-                []
-            )
-
-        for i, future in futures.items():
-            results[f"run_{i+1}"] = future.result()
-
-    return results
+    return parsed

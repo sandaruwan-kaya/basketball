@@ -1,0 +1,5 @@
+python -m venv venv
+.\venv\Scripts\activate
+
+uvicorn main:app --host 0.0.0.0 --port 8501 --reload
+streamlit run app.py 
