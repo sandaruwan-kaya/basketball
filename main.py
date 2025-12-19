@@ -39,6 +39,12 @@ logging.basicConfig(
 # -----------------------------
 app = FastAPI(title="Basketball Video Analysis API")
 
+app.mount(
+    "/.well-known",
+    StaticFiles(directory=".well-known"),
+    name="well-known",
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

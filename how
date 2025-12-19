@@ -9,3 +9,8 @@ uvicorn main:app --host 0.0.0.0 --port 8501 --reload
 1. netstat -ano | findstr 8501
 2. tasklist /FI "PID eq 4160"
 3. taskkill /PID 4160 /F
+
+
+uvicorn main:app --host 0.0.0.0 --port 443 --ssl-keyfile "C:\Users\azureuser\key.pem" --ssl-certfile "C:\Users\azureuser\cert.pem"
+
+uvicorn main:app --host 0.0.0.0 --port 443 --ssl-certfile "C:\Users\azureuser\fullchain.crt" --ssl-keyfile "C:\Users\azureuser\private.key"
