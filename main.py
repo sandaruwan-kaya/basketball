@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from gemini_engine import analyze_video_raw, recommend_clips_with_gemini
 
 import os
@@ -9,6 +10,21 @@ import logging
 import time
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
+from logging.handlers import RotatingFileHandler
+import re
+import traceback
+
+
+def safe_fs_name(value: str, max_len: int = 50) -> str:
+    """
+    Make a string safe for Windows/Linux file systems.
+    """
+    value = value.strip()
+    value = re.sub(r'[<>:"/\\|?*]+', "_", value)   # remove illegal chars
+    value = re.sub(r"\s+", "_", value)             # spaces -> _
+    value = re.sub(r"_+", "_", value)               # collapse ___
+    value = value.strip("._")                       # trim bad edges
+    return value[:max_len] or "unknown"
 
 
 # -----------------------------
@@ -17,7 +33,7 @@ from concurrent.futures import ThreadPoolExecutor
 LOG_DIR = "logs"
 COURSES_FILE = "courses.json"
 
-NUM_GEMINI_RUNS = 5   # <<< this is your num_runs
+NUM_GEMINI_RUNS = 5
 GEMINI_EXECUTOR = ThreadPoolExecutor(max_workers=NUM_GEMINI_RUNS)
 
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -26,13 +42,31 @@ with open(COURSES_FILE, "r", encoding="utf-8") as f:
     COURSES = json.load(f)
 
 # -----------------------------
-# LOGGING CONFIG
+# LOGGING CONFIG (UPDATED – FILE + CONSOLE + ROTATION)
 # -----------------------------
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(message)s",
+LOG_FILE = os.path.join(LOG_DIR, "api.log")
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+formatter = logging.Formatter(
+    "%(asctime)s | %(levelname)s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+
+file_handler = RotatingFileHandler(
+    LOG_FILE,
+    maxBytes=10 * 1024 * 1024,  # 10 MB
+    backupCount=10,
+    encoding="utf-8",
+)
+file_handler.setFormatter(formatter)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 # -----------------------------
 # FASTAPI APP
@@ -63,28 +97,57 @@ async def analyze_video_endpoint(
 ):
     request_start = time.time()
 
-    logging.info(
-        f"▶️ API START | tester={tester_name} | video={video.filename}"
-    )
+    logger.info(f"▶️ API START | tester={tester_name} | video={video.filename}")
 
     if tester_name.strip() == "":
-        logging.error("❌ Missing tester_name")
+        logger.error("❌ Missing tester_name")
         raise HTTPException(status_code=400, detail="tester_name is required")
 
     if video.content_type not in ["video/mp4", "video/quicktime", "video/x-msvideo"]:
-        logging.error(
+        logger.error(
             f"❌ Unsupported video format | tester={tester_name} | type={video.content_type}"
         )
         raise HTTPException(status_code=400, detail="Unsupported video format")
 
+    # -----------------------------
+    # READ VIDEO
+    # -----------------------------
     video_bytes = await video.read()
     loop = asyncio.get_running_loop()
 
     # -----------------------------
-    # GEMINI VIDEO ANALYSIS (THREADED)
+    # CREATE SESSION + SAVE INPUTS EARLY (NEW)
+    # -----------------------------
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    safe_tester = safe_fs_name(tester_name)
+    session_folder = os.path.join(LOG_DIR, f"{safe_tester}_{timestamp}")
+
+    try:
+        os.makedirs(session_folder, exist_ok=True)
+    except Exception as e:
+        logger.error(f"❌ Failed to create session folder: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid tester name. Please avoid special characters."
+        )
+
+    with open(os.path.join(session_folder, video.filename), "wb") as f:
+        f.write(video_bytes)
+
+    with open(os.path.join(session_folder, "meta.txt"), "w") as f:
+        f.write(f"Tester: {tester_name}\n")
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Video Name: {video.filename}\n")
+        f.write("Model: gemini-2.5-pro\n")
+
+    with open(os.path.join(session_folder, "status.txt"), "w") as f:
+        f.write("RECEIVED\n")
+
+    # -----------------------------
+    # GEMINI VIDEO ANALYSIS
     # -----------------------------
     gemini_analysis_start = time.time()
-    logging.info("🤖 Gemini ANALYSIS started")
+    logger.info("🤖 Gemini ANALYSIS started")
 
     try:
         analysis, raw = await loop.run_in_executor(
@@ -93,21 +156,40 @@ async def analyze_video_endpoint(
             video_bytes
         )
     except Exception as e:
-        logging.error(
+        logger.error(
             f"❌ Gemini ANALYSIS failed | tester={tester_name} | error={e}"
         )
-        raise HTTPException(status_code=500, detail=str(e))
 
-    gemini_analysis_latency = round(time.time() - gemini_analysis_start, 2)
-    logging.info(
-        f"🤖 Gemini ANALYSIS finished | latency={gemini_analysis_latency}s"
+        with open(os.path.join(session_folder, "status.txt"), "w") as f:
+            f.write("ANALYSIS_FAILED\n")
+
+        with open(os.path.join(session_folder, "error.txt"), "w", encoding="utf-8") as f:
+            f.write("Exception type:\n")
+            f.write(f"{type(e)}\n\n")
+
+            f.write("Exception message:\n")
+            f.write(f"{str(e)}\n\n")
+
+            f.write("Full traceback:\n")
+            f.write(traceback.format_exc())
+
+        raise HTTPException(status_code=500, detail="Gemini analysis failed")
+
+    with open(os.path.join(session_folder, "analysis.json"), "w", encoding="utf-8") as f:
+        json.dump(analysis, f, indent=4)
+
+    with open(os.path.join(session_folder, "raw_gemini.txt"), "w", encoding="utf-8") as f:
+        f.write(raw)
+
+    logger.info(
+        f"🤖 Gemini ANALYSIS finished | latency={round(time.time() - gemini_analysis_start, 2)}s"
     )
 
     # -----------------------------
-    # GEMINI RECOMMENDATION (THREADED)
+    # GEMINI RECOMMENDATION
     # -----------------------------
     gemini_reco_start = time.time()
-    logging.info("🤖 Gemini RECOMMENDATION started")
+    logger.info("🤖 Gemini RECOMMENDATION started")
 
     try:
         recommendations = await loop.run_in_executor(
@@ -117,46 +199,27 @@ async def analyze_video_endpoint(
             COURSES
         )
     except Exception as e:
-        logging.error(
-            f"❌ Gemini RECOMMENDATION failed | tester={tester_name} | error={e}"
-        )
-        raise HTTPException(status_code=500, detail=f"Clip recommendation failed: {e}")
+        logger.error(f"❌ Gemini RECOMMENDATION failed | tester={tester_name} | error={e}")
 
-    gemini_reco_latency = round(time.time() - gemini_reco_start, 2)
-    logging.info(
-        f"🤖 Gemini RECOMMENDATION finished | latency={gemini_reco_latency}s"
-    )
+        with open(os.path.join(session_folder, "status.txt"), "w") as f:
+            f.write("RECOMMENDATION_FAILED\n")
 
-    # -----------------------------
-    # FILE LOGGING (UNCHANGED)
-    # -----------------------------
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    session_folder = os.path.join(LOG_DIR, f"{tester_name}_{timestamp}")
-    os.makedirs(session_folder, exist_ok=True)
+        with open(os.path.join(session_folder, "error.txt"), "w") as f:
+            f.write(str(e))
 
-    with open(os.path.join(session_folder, video.filename), "wb") as f:
-        f.write(video_bytes)
-
-    with open(os.path.join(session_folder, "analysis.json"), "w", encoding="utf-8") as f:
-        json.dump(analysis, f, indent=4)
+        raise HTTPException(status_code=500, detail="Clip recommendation failed")
 
     with open(os.path.join(session_folder, "recommended_clips.json"), "w", encoding="utf-8") as f:
         json.dump(recommendations, f, indent=4)
 
-    with open(os.path.join(session_folder, "raw_gemini.txt"), "w", encoding="utf-8") as f:
-        f.write(raw)
-
-    with open(os.path.join(session_folder, "meta.txt"), "w") as f:
-        f.write(f"Tester: {tester_name}\n")
-        f.write(f"Timestamp: {timestamp}\n")
-        f.write(f"Video Name: {video.filename}\n")
-        f.write(f"Model: gemini-2.5-pro\n")
+    with open(os.path.join(session_folder, "status.txt"), "w") as f:
+        f.write("SUCCESS\n")
 
     # -----------------------------
     # TOTAL LATENCY
     # -----------------------------
     total_latency = round(time.time() - request_start, 2)
-    logging.info(
+    logger.info(
         f"✅ API DONE | tester={tester_name} | total_latency={total_latency}s"
     )
 
