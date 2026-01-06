@@ -1,151 +1,70 @@
-# app.py
 import streamlit as st
 import os
-import json
-import datetime
-from gemini_engine import compare_models
-from gemini_engine import compare_models_multi_run
+from gemini_engine import analyze_frames
 
-# -------------------------
-# Hard-coded prompt here
-# -------------------------
-PROMPT = """
-You are an expert basketball shooting coach AND a precise video analyst.
-Your job is to (1) COUNT SHOTS.
+# --------------------------------------------------
+# CONFIG
+# --------------------------------------------------
+BASE_FRAMES_DIR = "frames"
+MAX_FRAMES = 30  # decision frames only (important)
 
-You MUST follow the instructions below exactly and ONLY return the JSON object in the specified format.
+st.set_page_config(page_title="Gemini Shot Test", layout="centered")
+st.title("🏀 Gemini Shot Result Test")
+st.write("Frames only • One shot attempt • MADE / MISSED / UNCLEAR")
 
---------------------------------
-TASK
---------------------------------
-From the provided basketball shooting video:
+# --------------------------------------------------
+# INPUTS
+# --------------------------------------------------
+video_no = st.text_input("Video number", value="10")
+attempt_no = st.text_input("Attempt number", value="1")
 
-1. Identify every DISTINCT shot attempt.
-2. Identify which of those attempts are MADE shots.
+FRAMES_DIR = os.path.join(BASE_FRAMES_DIR, video_no, attempt_no)
 
---------------------------------
-DEFINITIONS
---------------------------------
-- "Shot attempt":
-  - A deliberate shooting motion TOWARD the basket where:
-    - The player gathers the ball,
-    - Moves through a shooting motion, and
-    - RELEASES the ball from their hands TOWARD the hoop.
-  - EXCLUDE passes, lobs, fakes, dribbles, unclear releases.
+# --------------------------------------------------
+# LOAD FRAMES
+# --------------------------------------------------
+if not os.path.exists(FRAMES_DIR):
+    st.error(f"Frames folder not found: {FRAMES_DIR}")
+    st.stop()
 
-- "Made shot":
-  - Only if the ball CLEARLY goes through the hoop.
-  - If unclear → count as attempt only.
+frame_files = sorted([
+    os.path.join(FRAMES_DIR, f)
+    for f in os.listdir(FRAMES_DIR)
+    if f.lower().endswith((".jpg", ".jpeg", ".png"))
+])
 
---------------------------------
-STRICT OUTPUT FORMAT
---------------------------------
-{
-  "shots_attempted": { "total": 0 },
-  "shots_made": { "total": 0 },
-  "shot_attempt_events": [{ "timestamp": "" }],
-  "shot_made_events": [{ "timestamp": "" }],
-}
+# Take LAST frames only (most signal)
+if len(frame_files) > MAX_FRAMES:
+    frame_files = frame_files[-MAX_FRAMES:]
 
---------------------------------
-RULES
---------------------------------
-- No guessing.
-- shots_made.total <= shots_attempted.total
-- If unclear → do not count.
-"""
+# --------------------------------------------------
+# TERMINAL LOGS
+# --------------------------------------------------
+print("=" * 60)
+print(f"📂 Using frames directory: {FRAMES_DIR}")
+print(f"🧮 Frames used: {len(frame_files)}")
+for f in frame_files:
+    print("   -", f)
+print("=" * 60)
 
-# - "Made shot":
-#   - Only if the ball CLEARLY goes through the hoop.
-#   - This includes clean swishes, rim-ins, bank shots, and rattled shots.
-#   - If unclear → count as attempt only.
+# --------------------------------------------------
+# UI
+# --------------------------------------------------
+st.write(f"Frames selected: **{len(frame_files)}**")
 
-  # "shot_attempt_events": [{ "timestamp": "" }],
-  # "shot_made_events": [{ "timestamp": "" }],
+with st.expander("Preview frames"):
+    for f in frame_files:
+        st.image(f, width=220)
 
-LOG_DIR = "logs"
-os.makedirs(LOG_DIR, exist_ok=True)
+if st.button("Analyze Shot"):
+    with st.spinner("Sending frames to Gemini..."):
+        result = analyze_frames(frame_files)
 
-st.title("⚡ Gemini Video Test (Minimal Mode)")
-st.write("Upload a video and compare Gemini 2.5 Pro vs Gemini 3 Preview outputs.")
+    st.subheader("Result")
 
-video = st.file_uploader("Upload a training video:", type=["mp4", "mov", "avi"])
-
-if st.button("Run Analysis"):
-
-    if video is None:
-        st.error("Please upload a video first.")
-        st.stop()
-
-    video_bytes = video.read()
-
-    st.info("Running models… please wait.")
-
-    NUM_RUNS = 5
-    results = compare_models_multi_run(PROMPT, video_bytes, NUM_RUNS)
-
-    # Run both Gemini models
-    # results = compare_models(PROMPT, video_bytes)
-
-    # st.subheader("Live Logs")
-    # st.text("\n".join(results["gemini_2_5_pro"]["log"]))
-    # st.text("\n".join(results["gemini_3_pro_preview"]["log"]))
-
-
-    # -------------------------
-    # Create log folder
-    # -------------------------
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    session_dir = os.path.join(LOG_DIR, f"session_{timestamp}")
-    os.makedirs(session_dir, exist_ok=True)
-
-    # Save raw outputs
-    # with open(os.path.join(session_dir, "raw_g25.txt"), "w", encoding="utf-8") as f:
-    #     f.write(results["gemini_2_5_pro"]["raw"])
-
-    # with open(os.path.join(session_dir, "raw_g30.txt"), "w", encoding="utf-8") as f:
-    #     f.write(results["gemini_3_pro_preview"]["raw"])
-
-    # with open(os.path.join(session_dir, "results.json"), "w", encoding="utf-8") as f:
-    #     json.dump(results, f, indent=4)
-
-    for run_id, run_result in results.items():
-      with open(os.path.join(session_dir, f"{run_id}_raw_g25_pro.txt"), "w", encoding="utf-8") as f:
-          f.write(run_result["raw"])
-
-      # Save metadata
-    with open(os.path.join(session_dir, "meta.txt"), "w") as f:
-        # f.write(f"Tester: {tester_name}\n")
-        f.write(f"Timestamp: {timestamp}\n")
-        f.write(f"Original Filename: {video.name}\n")
-        # f.write(f"Video File: {video_path}\n")
-
-    st.success("Completed! Results logged.")
-
-    # -------------------------
-    # DISPLAY RESULTS
-    # -------------------------
-
-    # st.subheader("🐢 Gemini 2.5 Pro Output")
-    # r = results["gemini_2_5_pro"]
-    # st.write(f"Latency: **{r['latency']} sec**")
-    # st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    # st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g25")
-
-
-    # st.subheader("🚀 Gemini 3 Pro Preview Output")
-    # r = results["gemini_3_pro_preview"]
-    # st.write(f"Latency: **{r['latency']} sec**")
-    # st.write(f"Tokens (in/out/total): {r['input_tokens']}/{r['output_tokens']}/{r['total_tokens']}")
-    # st.text_area("Raw Output", r["raw"], height=300, key="raw_output_g30")
-
-    for run_id, run_result in results.items():
-        st.markdown(f"### {run_id.upper()}")
-        st.text_area(
-            label=f"Raw Output ({run_id})",
-            value=run_result["raw"],
-            height=250,
-            key=f"raw_{run_id}"
-        )
-
-    st.code(f"Logs saved at: {session_dir}")
+    if result == "MADE":
+        st.success("🏀 MADE")
+    elif result == "MISSED":
+        st.error("❌ MISSED")
+    else:
+        st.warning("⚠️ UNCLEAR")
