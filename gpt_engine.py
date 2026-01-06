@@ -1,4 +1,5 @@
 import os
+import base64
 from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -23,16 +24,19 @@ MISSED
 """
 
 def analyze_frames(frame_paths):
-    """
-    frame_paths: list of image file paths
-    """
-    inputs = [{"type": "input_text", "text": PROMPT}]
+    inputs = [
+        {
+            "type": "input_text",
+            "text": PROMPT
+        }
+    ]
 
     for path in frame_paths:
         with open(path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("utf-8")
             inputs.append({
                 "type": "input_image",
-                "image_base64": f.read()
+                "image_base64": b64
             })
 
     response = client.responses.create(
