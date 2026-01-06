@@ -2,7 +2,8 @@ import streamlit as st
 import os
 
 from gemini_engine import analyze_frames as analyze_gemini
-from gpt_engine import analyze_frames as analyze_gpt
+from gpt_engine import analyze_frames_parallel
+
 
 # --------------------------------------------------
 # CONFIG
@@ -12,7 +13,7 @@ MAX_FRAMES = 30
 
 st.set_page_config(page_title="Shot Result Comparison", layout="centered")
 st.title("🏀 Shot Result Comparison")
-st.write("Gemini vs GPT Vision (same frames)")
+st.write("Gemini (new SDK) vs GPT Vision ×5 (same frames)")
 
 # --------------------------------------------------
 # INPUTS
@@ -32,8 +33,12 @@ frame_files = sorted([
     if f.lower().endswith((".jpg", ".jpeg", ".png"))
 ])
 
-# Use last frames only
+# Use last frames only (decision-heavy frames)
 frame_files = frame_files[-MAX_FRAMES:]
+
+if len(frame_files) == 0:
+    st.error("No frames found in directory.")
+    st.stop()
 
 # --------------------------------------------------
 # TERMINAL LOGS
@@ -46,38 +51,43 @@ for f in frame_files:
 print("=" * 60)
 
 # --------------------------------------------------
-# UI
+# UI – PREVIEW
 # --------------------------------------------------
 with st.expander("Preview frames"):
     for f in frame_files:
         st.image(f, width=220)
 
-if st.button("Analyze Shot"):
+# --------------------------------------------------
+# RUN ANALYSIS
+# --------------------------------------------------
+if st.button("Analyze Shot (Gemini + GPT ×5)"):
 
-    with st.spinner("Running Gemini analysis..."):
+    # ---------- Gemini (single run) ----------
+    with st.spinner("Running Gemini (new SDK)..."):
         try:
             gemini_result = analyze_gemini(frame_files)
         except Exception as e:
             gemini_result = f"ERROR: {e}"
 
-    with st.spinner("Running GPT Vision analysis..."):
-        try:
-            gpt_result = analyze_gpt(frame_files)
-        except Exception as e:
-            gpt_result = f"ERROR: {e}"
+    # ---------- GPT Vision (5 parallel runs) ----------
+    with st.spinner("Running GPT Vision (5 parallel runs)..."):
+        gpt_results = analyze_frames_parallel(frame_files, num_runs=5)
 
-    # Normalize Gemini empty output
-    if not gemini_result:
-        gemini_result = "UNCLEAR"
-
+    # --------------------------------------------------
+    # DISPLAY RESULTS
+    # --------------------------------------------------
     st.subheader("Results")
 
     col1, col2 = st.columns(2)
 
+    # ---------- Gemini column ----------
     with col1:
-        st.markdown("### 🟦 Gemini")
-        st.info(gemini_result)
+        st.markdown("## 🟦 Gemini (new SDK)")
+        st.text(gemini_result if gemini_result else "NO OUTPUT")
 
+    # ---------- GPT column ----------
     with col2:
-        st.markdown("### 🟩 GPT Vision")
-        st.success(gpt_result)
+        st.markdown("## 🟩 GPT Vision ×5")
+        for r in gpt_results:
+            st.markdown(f"**Run {r['run']}**")
+            st.text(r["raw"])
