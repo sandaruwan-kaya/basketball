@@ -2,3 +2,5 @@ venv/
 .env
 logs
 samples/
+frames/
+__pycache__/
