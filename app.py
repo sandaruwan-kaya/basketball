@@ -64,8 +64,8 @@ if st.button("Analyze Shot (Gemini ×5 + GPT ×5)"):
     with st.spinner("Running Gemini (5 parallel runs)..."):
         gemini_results = analyze_gemini_parallel(frame_files, num_runs=5)
 
-    with st.spinner("Running GPT Vision (5 parallel runs)..."):
-        gpt_results = analyze_gpt_parallel(frame_files, num_runs=5)
+    # with st.spinner("Running GPT Vision (5 parallel runs)..."):
+    #     gpt_results = analyze_gpt_parallel(frame_files, num_runs=5)
 
     st.subheader("Results")
 
@@ -79,8 +79,8 @@ if st.button("Analyze Shot (Gemini ×5 + GPT ×5)"):
             st.text(r["raw"])
 
     # -------- GPT --------
-    with col2:
-        st.markdown("## 🟩 GPT Vision ×5")
-        for r in gpt_results:
-            st.markdown(f"**Run {r['run']}**")
-            st.text(r["raw"])
+    # with col2:
+    #     st.markdown("## 🟩 GPT Vision ×5")
+    #     for r in gpt_results:
+    #         st.markdown(f"**Run {r['run']}**")
+    #         st.text(r["raw"])

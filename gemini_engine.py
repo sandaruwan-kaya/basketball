@@ -32,6 +32,7 @@ DESCRIPTION: <one or two sentences>
 # Single Gemini run
 # --------------------------------------------------
 def _run_single(frame_paths):
+    print(f"Starting Gemini analysis for {len(frame_paths)} frames...")
     contents = [PROMPT]
 
     for path in frame_paths:
@@ -47,7 +48,7 @@ def _run_single(frame_paths):
         model="gemini-2.5-pro",
         contents=contents
     )
-
+    print("Received response from Gemini.")
     return response.text.strip()
 
 
@@ -55,6 +56,7 @@ def _run_single(frame_paths):
 # Parallel Gemini runs
 # --------------------------------------------------
 def analyze_frames_parallel(frame_paths, num_runs=5):
+    print(f"Starting parallel analysis with {num_runs} runs...")
     results = []
 
     with ThreadPoolExecutor(max_workers=num_runs) as executor:
@@ -69,10 +71,13 @@ def analyze_frames_parallel(frame_paths, num_runs=5):
                     "run": idx,
                     "raw": future.result()
                 })
+                print(f"Completed run {idx}/{num_runs}")
             except Exception as e:
                 results.append({
                     "run": idx,
                     "raw": f"ERROR: {e}"
                 })
+                print(f"Error in run {idx}: {e}")
 
+    print("All runs completed.")
     return results

@@ -29,6 +29,7 @@ DESCRIPTION: <one or two sentences>
 # Single GPT Vision run
 # --------------------------------------------------
 def _run_single(frame_paths):
+    print(f"Starting GPT analysis for {len(frame_paths)} frames...")
     content = [{"type": "text", "text": PROMPT}]
 
     for path in frame_paths:
@@ -48,6 +49,7 @@ def _run_single(frame_paths):
     )
 
     text = resp.choices[0].message.content.strip()
+    print("Received response from GPT.")
     return text
 
 
@@ -59,6 +61,7 @@ def analyze_frames_parallel(frame_paths, num_runs=5):
     Runs GPT Vision multiple times in parallel on the same frames.
     Returns a list of raw outputs.
     """
+    print(f"Starting parallel GPT analysis with {num_runs} runs...")
     results = []
 
     with ThreadPoolExecutor(max_workers=num_runs) as executor:
@@ -74,10 +77,13 @@ def analyze_frames_parallel(frame_paths, num_runs=5):
                     "run": i,
                     "raw": output
                 })
+                print(f"Completed GPT run {i}/{num_runs}")
             except Exception as e:
                 results.append({
                     "run": i,
                     "raw": f"ERROR: {e}"
                 })
+                print(f"Error in GPT run {i}: {e}")
 
+    print("All GPT runs completed.")
     return results
