@@ -1,9 +1,8 @@
 import streamlit as st
 import os
 
-from gemini_engine import analyze_frames as analyze_gemini
-from gpt_engine import analyze_frames_parallel
-
+from gemini_engine import analyze_frames_parallel as analyze_gemini_parallel
+from gpt_engine import analyze_frames_parallel as analyze_gpt_parallel
 
 # --------------------------------------------------
 # CONFIG
@@ -60,32 +59,26 @@ with st.expander("Preview frames"):
 # --------------------------------------------------
 # RUN ANALYSIS
 # --------------------------------------------------
-if st.button("Analyze Shot (Gemini + GPT ×5)"):
+if st.button("Analyze Shot (Gemini ×5 + GPT ×5)"):
 
-    # ---------- Gemini (single run) ----------
-    with st.spinner("Running Gemini (new SDK)..."):
-        try:
-            gemini_result = analyze_gemini(frame_files)
-        except Exception as e:
-            gemini_result = f"ERROR: {e}"
+    with st.spinner("Running Gemini (5 parallel runs)..."):
+        gemini_results = analyze_gemini_parallel(frame_files, num_runs=5)
 
-    # ---------- GPT Vision (5 parallel runs) ----------
     with st.spinner("Running GPT Vision (5 parallel runs)..."):
-        gpt_results = analyze_frames_parallel(frame_files, num_runs=5)
+        gpt_results = analyze_gpt_parallel(frame_files, num_runs=5)
 
-    # --------------------------------------------------
-    # DISPLAY RESULTS
-    # --------------------------------------------------
     st.subheader("Results")
 
     col1, col2 = st.columns(2)
 
-    # ---------- Gemini column ----------
+    # -------- Gemini --------
     with col1:
-        st.markdown("## 🟦 Gemini (new SDK)")
-        st.text(gemini_result if gemini_result else "NO OUTPUT")
+        st.markdown("## 🟦 Gemini ×5")
+        for r in gemini_results:
+            st.markdown(f"**Run {r['run']}**")
+            st.text(r["raw"])
 
-    # ---------- GPT column ----------
+    # -------- GPT --------
     with col2:
         st.markdown("## 🟩 GPT Vision ×5")
         for r in gpt_results:

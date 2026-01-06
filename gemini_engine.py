@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 load_dotenv()
 
@@ -27,28 +28,51 @@ RESULT: <MADE | MISSED>
 DESCRIPTION: <one or two sentences>
 """
 
-def analyze_frames(frame_paths):
-    print("▶️ [Gemini NEW] Preparing request...")
-
+# --------------------------------------------------
+# Single Gemini run
+# --------------------------------------------------
+def _run_single(frame_paths):
     contents = [PROMPT]
 
-    for i, frame_path in enumerate(frame_paths, start=1):
-        print(f"   └─ Frame {i}: {frame_path}")
-        with open(frame_path, "rb") as f:
-            img_bytes = f.read()
-
-        contents.append(
-            types.Part.from_bytes(
-                data=img_bytes,
-                mime_type="image/jpeg"
+    for path in frame_paths:
+        with open(path, "rb") as f:
+            contents.append(
+                types.Part.from_bytes(
+                    data=f.read(),
+                    mime_type="image/jpeg"
+                )
             )
-        )
 
-    print("🚀 [Gemini NEW] Sending request...")
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-pro",
         contents=contents
     )
 
-    print("✅ [Gemini NEW] Response received")
     return response.text.strip()
+
+
+# --------------------------------------------------
+# Parallel Gemini runs
+# --------------------------------------------------
+def analyze_frames_parallel(frame_paths, num_runs=5):
+    results = []
+
+    with ThreadPoolExecutor(max_workers=num_runs) as executor:
+        futures = [
+            executor.submit(_run_single, frame_paths)
+            for _ in range(num_runs)
+        ]
+
+        for idx, future in enumerate(as_completed(futures), start=1):
+            try:
+                results.append({
+                    "run": idx,
+                    "raw": future.result()
+                })
+            except Exception as e:
+                results.append({
+                    "run": idx,
+                    "raw": f"ERROR: {e}"
+                })
+
+    return results
